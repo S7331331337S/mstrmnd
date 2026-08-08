@@ -1,0 +1,15 @@
+node_modules/
+.turbo/
+.DS_Store
+*.log
+
+# Local env
+.env
+.env.doctrine
+.env.local
+
+# Synced doctrine (generated; do not hand-edit)
+.generated/
+
+# Runtime runs + audit (local Operator Zero)
+.mstrmnd/
