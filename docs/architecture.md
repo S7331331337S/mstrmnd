@@ -32,17 +32,22 @@ User
   │                      ├─ tools → merge JSONB on profiles (service role)
   │                      └─ complete_onboarding → onboarding_completed=true
   │
+  ├─ /pricing ──► Stripe Checkout (Solo/Pro/Mastermind)
+  │                      │
+  │                      ▼
+  │              webhook → profiles.subscription_tier
+  │
   └─ /dashboard ──► protected; requires onboarding_completed
                          │
-                         └─ (next) Stripe gate + signal reports
+                         └─ subscription panel + (next) signal reports
 ```
 
 ## Boundaries
 
-- **Web** owns UX, Supabase SSR auth, and calling the eve HTTP session API.
+- **Web** owns UX, Supabase SSR auth, message persistence, and calling the eve HTTP session API.
 - **eve agent** owns conversational intelligence gathering and profile writes via the Supabase **service role** (RLS still protects user clients).
 - **Supabase** owns identity, persistence, and row-level security.
-- **Stripe** products already exist; Phase 1 only surfaces tier placeholders.
+- **Stripe** Checkout + webhook write `subscription_tier` / customer ids on `profiles`.
 
 ## Monorepo layout
 

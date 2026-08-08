@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import type { ChatStatus, FileUIPart } from "ai";
 import { CopyIcon, GlobeIcon, MicIcon, PaperclipIcon } from "lucide-react";
@@ -47,6 +47,14 @@ import {
 } from "@/components/ai-elements/prompt-input";
 import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
 import { Button } from "@/components/ui/button";
+import {
+  completeOnboardingConversation,
+  ensureOnboardingConversation,
+  loadConversationMessages,
+  loadPreviewConversation,
+  persistMessage,
+  savePreviewConversation,
+} from "@/lib/chat-persistence";
 import { continueEveSession, eveStreamUrl, startEveSession } from "@/lib/eve";
 import { createClient } from "@/lib/supabase/client";
 
@@ -57,6 +65,7 @@ type ChatMessage = {
   role: "user" | "assistant";
   content: string;
   files?: ChatAttachment[];
+  persisted?: boolean;
 };
 
 const OPENING =
@@ -105,8 +114,10 @@ function PromptAttachments() {
 export function OnboardingChat() {
   const preview = process.env.NEXT_PUBLIC_UI_PREVIEW === "1";
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { id: "opening", role: "assistant", content: OPENING },
+    { id: "opening", role: "assistant", content: OPENING, persisted: true },
   ]);
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [status, setStatus] = useState<ChatStatus>("ready");
   const [error, setError] = useState<string | null>(null);
@@ -115,7 +126,99 @@ export function OnboardingChat() {
   const [model, setModel] = useState(MODELS[0].id);
   const [webSearch, setWebSearch] = useState(false);
   const [listening, setListening] = useState(false);
+  const hydrated = useRef(false);
   const supabase = useMemo(() => (preview ? null : createClient()), [preview]);
+
+  useEffect(() => {
+    if (hydrated.current) return;
+    hydrated.current = true;
+
+    if (preview) {
+      const saved = loadPreviewConversation();
+      const id = saved?.conversationId ?? crypto.randomUUID();
+      setConversationId(id);
+      if (saved?.messages?.length) {
+        setMessages(
+          saved.messages.map((message) => ({
+            id: message.id ?? crypto.randomUUID(),
+            role: message.role === "assistant" ? "assistant" : "user",
+            content: message.content,
+            persisted: true,
+          })),
+        );
+        setPreviewStep(Math.max(0, saved.messages.filter((m) => m.role === "user").length));
+        setComplete(Boolean(saved.complete));
+      } else {
+        savePreviewConversation({
+          conversationId: id,
+          messages: [{ id: "opening", role: "assistant", content: OPENING }],
+          complete: false,
+        });
+      }
+      return;
+    }
+
+    void (async () => {
+      try {
+        if (!supabase) return;
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) return;
+        setUserId(user.id);
+        const conversation = await ensureOnboardingConversation(
+          supabase,
+          user.id,
+        );
+        setConversationId(conversation.id);
+        setComplete(conversation.status === "completed");
+        const existing = await loadConversationMessages(
+          supabase,
+          conversation.id,
+        );
+        if (existing.length > 0) {
+          setMessages(
+            existing
+              .filter(
+                (message) =>
+                  message.role === "user" || message.role === "assistant",
+              )
+              .map((message) => ({
+                id: message.id ?? crypto.randomUUID(),
+                role: message.role as "user" | "assistant",
+                content: message.content,
+                persisted: true,
+              })),
+          );
+        } else {
+          await persistMessage(supabase, {
+            conversationId: conversation.id,
+            userId: user.id,
+            message: { role: "assistant", content: OPENING },
+          });
+        }
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Could not initialize onboarding conversation",
+        );
+      }
+    })();
+  }, [preview, supabase]);
+
+  useEffect(() => {
+    if (!preview || !conversationId) return;
+    savePreviewConversation({
+      conversationId,
+      messages: messages.map((message) => ({
+        id: message.id,
+        role: message.role,
+        content: message.content,
+      })),
+      complete,
+    });
+  }, [preview, conversationId, messages, complete]);
 
   async function getAccessToken() {
     if (!supabase) throw new Error("Not signed in");
@@ -123,6 +226,20 @@ export function OnboardingChat() {
     const token = data.session?.access_token;
     if (!token) throw new Error("Not signed in");
     return token;
+  }
+
+  async function persistChatMessage(message: ChatMessage) {
+    if (preview || !supabase || !conversationId || !userId) return;
+    await persistMessage(supabase, {
+      conversationId,
+      userId,
+      message: {
+        id: message.id,
+        role: message.role,
+        content: message.content,
+        toolResults: message.files ? { files: message.files } : undefined,
+      },
+    });
   }
 
   async function attachStream(nextSessionId: string, accessToken: string) {
@@ -137,6 +254,7 @@ export function OnboardingChat() {
     const decoder = new TextDecoder();
     let buffer = "";
     const assistantId = `a-${Date.now()}`;
+    let content = "";
     setMessages((prev) => [
       ...prev,
       { id: assistantId, role: "assistant", content: "" },
@@ -162,6 +280,7 @@ export function OnboardingChat() {
             event.text ??
             (typeof event.content === "string" ? event.content : "");
           if (!chunk) continue;
+          content += chunk;
           setMessages((prev) =>
             prev.map((message) =>
               message.id === assistantId
@@ -174,6 +293,13 @@ export function OnboardingChat() {
         }
       }
     }
+
+    await persistChatMessage({
+      id: assistantId,
+      role: "assistant",
+      content,
+    });
+    return content;
   }
 
   async function sendPreview(text: string, files?: ChatAttachment[]) {
@@ -193,6 +319,7 @@ export function OnboardingChat() {
         id: `a-${Date.now()}`,
         role: "assistant",
         content: `${reply}${attachmentNote}`,
+        persisted: true,
       },
     ]);
     const next = previewStep + 1;
@@ -210,31 +337,52 @@ export function OnboardingChat() {
 
     const attachments: ChatAttachment[] = files.map((file, index) => ({
       ...file,
-      id: ("id" in file && typeof file.id === "string" && file.id) || `file-${Date.now()}-${index}`,
+      id:
+        ("id" in file && typeof file.id === "string" && file.id) ||
+        `file-${Date.now()}-${index}`,
     }));
 
+    const userMessage: ChatMessage = {
+      id: `u-${Date.now()}`,
+      role: "user",
+      content: text || "Shared attachments for context.",
+      files: attachments,
+    };
+
     setError(null);
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: `u-${Date.now()}`,
-        role: "user",
-        content: text || "Shared attachments for context.",
-        files: attachments,
-      },
-    ]);
+    setMessages((prev) => [...prev, userMessage]);
 
     if (preview) {
-      await sendPreview(text || "Shared attachments for context.", attachments);
+      await sendPreview(userMessage.content, attachments);
       return;
     }
 
     setStatus("submitted");
     try {
+      if (supabase && userId) {
+        const conversation =
+          conversationId != null
+            ? { id: conversationId }
+            : await ensureOnboardingConversation(supabase, userId, sessionId);
+        setConversationId(conversation.id);
+        await persistMessage(supabase, {
+          conversationId: conversation.id,
+          userId,
+          message: {
+            id: userMessage.id,
+            role: "user",
+            content: userMessage.content,
+            toolResults: attachments.length ? { files: attachments } : undefined,
+          },
+        });
+      }
+
       const accessToken = await getAccessToken();
       const payload = [
         text,
-        files.length ? `[attachments: ${files.map((f) => f.filename ?? f.mediaType).join(", ")}]` : "",
+        files.length
+          ? `[attachments: ${files.map((f) => f.filename ?? f.mediaType).join(", ")}]`
+          : "",
         webSearch ? "[web_search: on]" : "",
         `[model: ${model}]`,
       ]
@@ -246,6 +394,14 @@ export function OnboardingChat() {
         const started = await startEveSession(payload, accessToken);
         if (!started.sessionId) throw new Error("eve did not return a session id");
         setSessionId(started.sessionId);
+        if (supabase && userId) {
+          const conversation = await ensureOnboardingConversation(
+            supabase,
+            userId,
+            started.sessionId,
+          );
+          setConversationId(conversation.id);
+        }
         await attachStream(started.sessionId, accessToken);
       } else {
         await continueEveSession(sessionId, payload, accessToken);
@@ -262,6 +418,17 @@ export function OnboardingChat() {
     }
   }
 
+  async function finishOnboarding() {
+    if (preview) {
+      setComplete(true);
+      return;
+    }
+    if (supabase && conversationId) {
+      await completeOnboardingConversation(supabase, conversationId);
+    }
+    setComplete(true);
+  }
+
   function onSuggestion(text: string) {
     void handleSubmit({ text, files: [] });
   }
@@ -269,37 +436,17 @@ export function OnboardingChat() {
   function toggleSpeech() {
     const SpeechRecognition =
       typeof window !== "undefined"
-        ? (window as unknown as {
-            SpeechRecognition?: new () => {
-              start: () => void;
-              stop: () => void;
-              onresult: ((event: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
-              onend: (() => void) | null;
-              continuous: boolean;
-              interimResults: boolean;
-              lang: string;
-            };
-            webkitSpeechRecognition?: new () => {
-              start: () => void;
-              stop: () => void;
-              onresult: ((event: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
-              onend: (() => void) | null;
-              continuous: boolean;
-              interimResults: boolean;
-              lang: string;
-            };
-          }).SpeechRecognition ||
-          (window as unknown as {
-            webkitSpeechRecognition?: new () => {
-              start: () => void;
-              stop: () => void;
-              onresult: ((event: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
-              onend: (() => void) | null;
-              continuous: boolean;
-              interimResults: boolean;
-              lang: string;
-            };
-          }).webkitSpeechRecognition
+        ? (
+            window as unknown as {
+              SpeechRecognition?: new () => SpeechRecognitionLike;
+              webkitSpeechRecognition?: new () => SpeechRecognitionLike;
+            }
+          ).SpeechRecognition ||
+          (
+            window as unknown as {
+              webkitSpeechRecognition?: new () => SpeechRecognitionLike;
+            }
+          ).webkitSpeechRecognition
         : undefined;
 
     if (!SpeechRecognition) {
@@ -339,6 +486,12 @@ export function OnboardingChat() {
           <div className="truncate text-sm text-zinc-200">
             Intelligence gathering
           </div>
+          {conversationId ? (
+            <div className="mt-1 truncate text-[10px] text-zinc-600">
+              conv {conversationId.slice(0, 8)}
+              {preview ? " · local persist" : " · supabase"}
+            </div>
+          ) : null}
         </div>
         <div className="shrink-0 text-[10px] uppercase tracking-[0.16em] text-[var(--platinum)]">
           eve · {MODELS.find((m) => m.id === model)?.name}
@@ -477,20 +630,37 @@ export function OnboardingChat() {
             </PromptInputFooter>
           </PromptInput>
 
+          {preview && previewStep >= PREVIEW_REPLIES.length - 1 ? (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              className="w-full"
+              onClick={() => void finishOnboarding()}
+            >
+              Mark onboarding complete
+            </Button>
+          ) : null}
+
           <p className="flex items-center gap-1.5 px-1 text-[10px] text-zinc-600">
             <PaperclipIcon className="size-3" />
-            Attachments, screenshots, voice, and model routing via AI Elements
-            PromptInput.
+            Messages persist to conversations/messages
+            {preview ? " (localStorage in preview)" : " (Supabase RLS)"}.
           </p>
         </div>
       ) : (
         <div className="flex flex-col gap-3 border-t border-zinc-800 px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-zinc-400">
-            Preview onboarding complete — open the seeded dashboard.
+            Onboarding saved — open the seeded dashboard or choose a plan.
           </p>
-          <Button asChild size="sm" className="w-full sm:w-auto">
-            <Link href="/dashboard">Open dashboard</Link>
-          </Button>
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+            <Button asChild size="sm" variant="outline" className="w-full sm:w-auto">
+              <Link href="/pricing">View pricing</Link>
+            </Button>
+            <Button asChild size="sm" className="w-full sm:w-auto">
+              <Link href="/dashboard">Open dashboard</Link>
+            </Button>
+          </div>
         </div>
       )}
 
@@ -502,3 +672,17 @@ export function OnboardingChat() {
     </div>
   );
 }
+
+type SpeechRecognitionLike = {
+  start: () => void;
+  stop: () => void;
+  onresult:
+    | ((event: {
+        results: ArrayLike<ArrayLike<{ transcript: string }>>;
+      }) => void)
+    | null;
+  onend: (() => void) | null;
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+};

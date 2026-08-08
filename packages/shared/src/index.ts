@@ -17,8 +17,5 @@ export type {
   SignalReport,
 } from "./profile";
 
-export const STRIPE_TIERS = {
-  solo: { name: "Solo", priceUsd: 49 },
-  pro: { name: "Pro", priceUsd: 149 },
-  mastermind: { name: "Mastermind", priceUsd: 349 },
-} as const;
+export type { StripeTierConfig } from "./billing";
+export { STRIPE_TIERS, STRIPE_TIER_LIST } from "./billing";

@@ -42,6 +42,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "streamdown": "^2.5.0",
+    "stripe": "^22.4.0",
     "tailwind-merge": "^3.0.2",
     "use-stick-to-bottom": "^1.1.6",
     "zod": "^4.4.3"

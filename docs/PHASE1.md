@@ -13,8 +13,8 @@ Locked scaffold for Mstrmnd:
 - [x] Real eve tools that merge JSONB profile fields
 - [x] Protected `/onboarding` and `/dashboard` routes
 - [x] `pnpm typecheck` green
-- [ ] Stripe checkout (placeholder only in Phase 1)
-- [ ] Message persistence into `conversations` / `messages`
+- [x] Stripe checkout (`/api/stripe/checkout` + webhook → `subscription_tier`)
+- [x] Message persistence into `conversations` / `messages` (Supabase; localStorage in UI preview)
 
 ## Local boot order
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import type { Profile } from "@mstrmnd/shared";
-import { STRIPE_TIERS } from "@mstrmnd/shared";
+import type { Profile, SubscriptionTier } from "@mstrmnd/shared";
+import { SubscriptionPanel } from "@/components/subscription-panel";
 import { isUiPreview, PREVIEW_PROFILE } from "@/lib/preview";
 import { createClient } from "@/lib/supabase/server";
 
@@ -26,11 +26,40 @@ function Panel({
   );
 }
 
-export default async function DashboardPage() {
+function checkoutMessage(
+  checkout?: string,
+  tier?: string,
+): string | null {
+  if (checkout === "success") {
+    return `Checkout complete${tier ? ` · ${tier}` : ""}. Subscription syncing via webhook.`;
+  }
+  if (checkout === "preview") {
+    return `Preview checkout simulated for ${tier ?? "selected"} tier. Wire Stripe keys for live billing.`;
+  }
+  return null;
+}
+
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const params = (await searchParams) ?? {};
+  const checkout = typeof params.checkout === "string" ? params.checkout : undefined;
+  const tierParam = typeof params.tier === "string" ? params.tier : undefined;
+  const notice = checkoutMessage(checkout, tierParam);
+
   let profile: Profile;
 
   if (isUiPreview()) {
-    profile = PREVIEW_PROFILE;
+    profile = {
+      ...PREVIEW_PROFILE,
+      subscription_tier:
+        checkout === "preview" &&
+        (tierParam === "solo" || tierParam === "pro" || tierParam === "mastermind")
+          ? (tierParam as SubscriptionTier)
+          : PREVIEW_PROFILE.subscription_tier,
+    };
   } else {
     const supabase = await createClient();
     const {
@@ -50,10 +79,6 @@ export default async function DashboardPage() {
     profile = loaded;
   }
 
-  const tier = profile.subscription_tier
-    ? STRIPE_TIERS[profile.subscription_tier]
-    : null;
-
   return (
     <main className="hero-atmosphere relative min-h-screen overflow-hidden">
       <div className="hero-grid absolute inset-0 opacity-35" aria-hidden />
@@ -70,7 +95,7 @@ export default async function DashboardPage() {
               {profile.full_name ?? "Your mastermind"}
             </h1>
             <p className="max-w-xl text-sm text-zinc-400">
-              Private profile seeded. Signal reports and deeper agents come next.
+              Private profile seeded. Manage subscription and review what eve learned.
             </p>
           </div>
           {isUiPreview() ? (
@@ -88,13 +113,10 @@ export default async function DashboardPage() {
           </Panel>
 
           <Panel title="Subscription">
-            <p className="text-sm text-zinc-200">
-              {tier ? `${tier.name} · $${tier.priceUsd}/mo` : "Not selected"}
-            </p>
-            <p className="mt-2 text-xs text-zinc-500">
-              Stripe products ready: Solo $49 / Pro $149 / Mastermind $349.
-              Checkout wiring next.
-            </p>
+            <SubscriptionPanel
+              tier={profile.subscription_tier}
+              checkoutNotice={notice}
+            />
           </Panel>
 
           <Panel title="Signal preferences">

@@ -24,8 +24,8 @@ Do **not** invent alternative stacks.
 - [x] eve intelligence-gathering agent + 6 tools
 - [x] Next.js auth/onboarding/dashboard skeleton
 - [x] Docs: architecture, schema, eve-tools
-- [ ] Stripe checkout wiring
-- [ ] Persist onboarding messages into `conversations` / `messages`
+- [x] Stripe checkout wiring (Solo/Pro/Mastermind + webhook → profile)
+- [x] Persist onboarding messages into `conversations` / `messages`
 - [ ] Signal report generation agent
 
 ## Hard invariants
@@ -40,4 +40,4 @@ Do **not** invent alternative stacks.
 
 - **Last aligned:** 2026-08-08
 - **Priority:** Phase 1 foundation scaffold per locked architecture
-- **Next:** chat persistence + Stripe
+- **Next:** signal report generation agent
