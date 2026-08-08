@@ -43,6 +43,31 @@ importers:
         specifier: ^5.8.2
         version: 5.9.3
 
+  agents/signal-report:
+    dependencies:
+      '@mstrmnd/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      '@supabase/supabase-js':
+        specifier: ^2.49.1
+        version: 2.112.2(@opentelemetry/api@1.9.0)
+      ai:
+        specifier: ^7.0.38
+        version: 7.0.58(zod@4.4.3)
+      eve:
+        specifier: ^0.31.3
+        version: 0.31.3(@opentelemetry/api@1.9.0)(ai@7.0.58(zod@4.4.3))(jiti@2.7.0)
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
+    devDependencies:
+      '@types/node':
+        specifier: ^22.13.10
+        version: 22.20.1
+      typescript:
+        specifier: ^5.8.2
+        version: 5.9.3
+
   apps/web:
     dependencies:
       '@ai-sdk/react':

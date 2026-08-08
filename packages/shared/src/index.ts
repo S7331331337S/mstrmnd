@@ -14,6 +14,7 @@ export type {
   Profile,
   Conversation,
   Message,
+  SignalReportContent,
   SignalReport,
 } from "./profile";
 

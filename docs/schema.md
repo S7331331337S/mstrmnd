@@ -31,7 +31,9 @@ Triggers:
 ### `signal_reports`
 - `period_type`: `weekly` | `monthly`
 - `status`: `pending` | `generating` | `ready` | `failed`
-- `content` jsonb payload for rendered report sections
+- `content` jsonb payload for rendered report sections:
+  - `highlights`, `watchlist`, `decisions`, optional `risks` / `sources`
+- Written by the signal-report eve agent (service role); users SELECT/INSERT/UPDATE own via RLS
 
 ## RLS
 
@@ -44,7 +46,7 @@ All four tables have RLS enabled.
 | `messages` | `user_id = auth.uid()` | SELECT / INSERT / UPDATE own |
 | `signal_reports` | `user_id = auth.uid()` | SELECT / INSERT / UPDATE own |
 
-The eve agent uses the **service role** key for profile merges during onboarding. Service role bypasses RLS by design.
+Eve agents use the **service role** key for profile merges (onboarding) and signal report writes. Service role bypasses RLS by design.
 
 ## Example profile JSON
 

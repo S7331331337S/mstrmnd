@@ -26,7 +26,7 @@ Do **not** invent alternative stacks.
 - [x] Docs: architecture, schema, eve-tools
 - [x] Stripe checkout wiring (Solo/Pro/Mastermind + webhook → profile)
 - [x] Persist onboarding messages into `conversations` / `messages`
-- [ ] Signal report generation agent
+- [x] Signal report generation agent
 
 ## Hard invariants
 
@@ -39,5 +39,5 @@ Do **not** invent alternative stacks.
 ## Status stamp
 
 - **Last aligned:** 2026-08-08
-- **Priority:** Phase 1 foundation scaffold per locked architecture
-- **Next:** signal report generation agent
+- **Priority:** Phase 1 foundation complete
+- **Next:** Phase 2 — live binds (Vercel/Supabase/Stripe) + cadence automation

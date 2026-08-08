@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import type { Profile, SubscriptionTier } from "@mstrmnd/shared";
+import type { Profile, SignalReport, SubscriptionTier } from "@mstrmnd/shared";
+import { SignalReportsPanel } from "@/components/signal-reports-panel";
 import { SubscriptionPanel } from "@/components/subscription-panel";
 import { isUiPreview, PREVIEW_PROFILE } from "@/lib/preview";
+import { PREVIEW_SIGNAL_REPORTS } from "@/lib/signal-reports";
 import { createClient } from "@/lib/supabase/server";
 
 function Panel({
@@ -50,6 +52,7 @@ export default async function DashboardPage({
   const notice = checkoutMessage(checkout, tierParam);
 
   let profile: Profile;
+  let reports: SignalReport[] = [];
 
   if (isUiPreview()) {
     profile = {
@@ -60,6 +63,7 @@ export default async function DashboardPage({
           ? (tierParam as SubscriptionTier)
           : PREVIEW_PROFILE.subscription_tier,
     };
+    reports = PREVIEW_SIGNAL_REPORTS;
   } else {
     const supabase = await createClient();
     const {
@@ -77,6 +81,15 @@ export default async function DashboardPage({
     const loaded = data as Profile | null;
     if (!loaded?.onboarding_completed) redirect("/onboarding");
     profile = loaded;
+
+    const { data: reportRows } = await supabase
+      .from("signal_reports")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(12);
+
+    reports = (reportRows as SignalReport[] | null) ?? [];
   }
 
   return (
@@ -95,7 +108,7 @@ export default async function DashboardPage({
               {profile.full_name ?? "Your mastermind"}
             </h1>
             <p className="max-w-xl text-sm text-zinc-400">
-              Private profile seeded. Manage subscription and review what eve learned.
+              Private profile seeded. Manage subscription and review signal reports.
             </p>
           </div>
           {isUiPreview() ? (
@@ -110,6 +123,13 @@ export default async function DashboardPage({
             <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-300">
               {profile.memory_summary ?? "No summary yet."}
             </p>
+          </Panel>
+
+          <Panel title="Signal reports" className="md:col-span-2">
+            <SignalReportsPanel
+              initialReports={reports}
+              isPreview={isUiPreview()}
+            />
           </Panel>
 
           <Panel title="Subscription">

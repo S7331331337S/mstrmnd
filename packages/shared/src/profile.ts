@@ -84,6 +84,16 @@ export interface Message {
   created_at: string;
 }
 
+/** Structured sections written by the signal-report eve agent. */
+export interface SignalReportContent {
+  highlights?: string[];
+  watchlist?: string[];
+  decisions?: string[];
+  risks?: string[];
+  sources?: string[];
+  [key: string]: unknown;
+}
+
 export interface SignalReport {
   id: string;
   user_id: string;
@@ -92,7 +102,7 @@ export interface SignalReport {
   period_end: string;
   title: string | null;
   summary: string | null;
-  content: Record<string, unknown>;
+  content: SignalReportContent;
   status: SignalReportStatus;
   generated_at: string | null;
   created_at: string;

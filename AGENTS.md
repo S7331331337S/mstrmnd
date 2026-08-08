@@ -8,7 +8,7 @@ User-owned agentic intelligence layer.
 
 - Frontend: Next.js App Router on Vercel (`apps/web`)
 - Auth + DB + RLS: Supabase
-- Agent runtime: eve (`agents/intelligence-gathering`)
+- Agent runtime: eve (`agents/intelligence-gathering`, `agents/signal-report`)
 - Models: Vercel AI Gateway
 - Durability: Vercel Workflows (via eve)
 - External tools: Vercel Connect
@@ -23,13 +23,14 @@ User-owned agentic intelligence layer.
 pnpm install
 pnpm verify
 pnpm --filter @mstrmnd/intelligence-gathering dev
+pnpm --filter @mstrmnd/signal-report dev
 pnpm --filter @mstrmnd/web dev
 ```
 
 ## HARD invariants
 
 1. Every table has RLS; users only touch their own rows.
-2. Eve tools write profiles with the Supabase service role and **merge** JSONB.
+2. Eve tools write profiles/reports with the Supabase service role and **merge** JSONB on profiles.
 3. Onboarding asks 1–2 focused questions at a time.
 4. No features outside the current phase scope.
 5. Dark Swiss, monochrome UI.
@@ -37,7 +38,8 @@ pnpm --filter @mstrmnd/web dev
 ## Layout
 
 - `apps/web` — Next.js
-- `agents/intelligence-gathering` — eve agent
+- `agents/intelligence-gathering` — eve onboarding agent
+- `agents/signal-report` — eve signal report agent
 - `packages/shared` — shared types
 - `supabase/migrations` — SQL
-- `docs/` — architecture, schema, eve-tools
+- `docs/` — architecture, schema, eve-tools, signal-report-tools

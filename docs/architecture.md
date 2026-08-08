@@ -39,13 +39,20 @@ User
   │
   └─ /dashboard ──► protected; requires onboarding_completed
                          │
-                         └─ subscription panel + (next) signal reports
+                         ├─ subscription panel
+                         └─ signal reports ← POST /api/signal-reports/generate
+                                │
+                                ▼
+                         eve signal-report agent (Bearer JWT)
+                                │
+                                └─ tools → signal_reports (service role)
 ```
 
 ## Boundaries
 
-- **Web** owns UX, Supabase SSR auth, message persistence, and calling the eve HTTP session API.
-- **eve agent** owns conversational intelligence gathering and profile writes via the Supabase **service role** (RLS still protects user clients).
+- **Web** owns UX, Supabase SSR auth, message persistence, and calling the eve HTTP session APIs.
+- **eve intelligence-gathering** owns conversational onboarding and profile writes via the Supabase **service role**.
+- **eve signal-report** owns weekly/monthly report generation into `signal_reports` via the service role.
 - **Supabase** owns identity, persistence, and row-level security.
 - **Stripe** Checkout + webhook write `subscription_tier` / customer ids on `profiles`.
 
@@ -53,7 +60,8 @@ User
 
 ```text
 apps/web                         Next.js
-agents/intelligence-gathering    eve agent
+agents/intelligence-gathering    eve onboarding agent
+agents/signal-report             eve signal report agent
 packages/shared                  shared TS types
 packages/schemas                 earlier contract package (retained)
 supabase/migrations              SQL + RLS
