@@ -57,16 +57,16 @@ export default async function DashboardPage() {
   return (
     <main className="hero-atmosphere relative min-h-screen overflow-hidden">
       <div className="hero-grid absolute inset-0 opacity-35" aria-hidden />
-      <div className="relative mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-8 px-6 py-10">
-        <header className="animate-rise flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div className="space-y-3">
+      <div className="relative mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-4 py-6 sm:gap-8 sm:px-6 sm:py-10">
+        <header className="animate-rise flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
+          <div className="space-y-2 sm:space-y-3">
             <Link
               href="/"
               className="text-xs font-semibold tracking-[0.34em] text-[var(--platinum)]"
             >
               MSTRMND
             </Link>
-            <h1 className="font-[family-name:var(--font-display)] text-4xl tracking-tight text-zinc-50 sm:text-5xl">
+            <h1 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-zinc-50 sm:text-5xl">
               {profile.full_name ?? "Your mastermind"}
             </h1>
             <p className="max-w-xl text-sm text-zinc-400">
@@ -80,7 +80,7 @@ export default async function DashboardPage() {
           ) : null}
         </header>
 
-        <div className="animate-rise-delay-1 grid gap-4 md:grid-cols-2">
+        <div className="animate-rise-delay-1 grid gap-3 sm:gap-4 md:grid-cols-2">
           <Panel title="Memory summary" className="md:col-span-2">
             <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-300">
               {profile.memory_summary ?? "No summary yet."}
