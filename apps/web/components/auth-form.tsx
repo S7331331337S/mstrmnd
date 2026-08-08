@@ -16,9 +16,15 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const [fullName, setFullName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const preview = process.env.NEXT_PUBLIC_UI_PREVIEW === "1";
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
+    if (preview) {
+      router.push("/onboarding");
+      return;
+    }
+
     setLoading(true);
     setError(null);
     const supabase = createClient();
@@ -69,7 +75,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
         <Input
           id="email"
           type="email"
-          required
+          required={!preview}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@company.com"
@@ -81,8 +87,8 @@ export function AuthForm({ mode }: { mode: Mode }) {
         <Input
           id="password"
           type="password"
-          required
-          minLength={8}
+          required={!preview}
+          minLength={preview ? undefined : 8}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="••••••••"
@@ -91,7 +97,13 @@ export function AuthForm({ mode }: { mode: Mode }) {
       </div>
       {error ? <p className="text-sm text-red-400">{error}</p> : null}
       <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? "Working…" : mode === "login" ? "Sign in" : "Create account"}
+        {loading
+          ? "Working…"
+          : preview
+            ? "Continue to onboarding"
+            : mode === "login"
+              ? "Sign in"
+              : "Create account"}
       </Button>
     </form>
   );

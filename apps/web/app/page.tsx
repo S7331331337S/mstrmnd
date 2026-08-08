@@ -1,65 +1,84 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { isUiPreview } from "@/lib/preview";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function HomePage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  if (!isUiPreview()) {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("onboarding_completed")
-      .eq("id", user.id)
-      .maybeSingle();
+    if (user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("onboarding_completed")
+        .eq("id", user.id)
+        .maybeSingle();
 
-    redirect(profile?.onboarding_completed ? "/dashboard" : "/onboarding");
+      redirect(profile?.onboarding_completed ? "/dashboard" : "/onboarding");
+    }
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col justify-between px-6 py-10">
-      <header className="flex items-center justify-between">
-        <div className="text-sm font-semibold tracking-[0.28em] text-zinc-100">
-          MSTRMND
-        </div>
-        <div className="flex gap-2">
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/login">Sign in</Link>
-          </Button>
-          <Button asChild size="sm">
-            <Link href="/signup">Get started</Link>
-          </Button>
-        </div>
-      </header>
+    <main className="hero-atmosphere hero-grain relative min-h-screen overflow-hidden">
+      <div className="hero-grid absolute inset-0" aria-hidden />
+      <div
+        className="scan-line pointer-events-none absolute inset-x-0 top-[18%] h-px bg-gradient-to-r from-transparent via-[var(--platinum)] to-transparent opacity-40"
+        aria-hidden
+      />
 
-      <section className="max-w-2xl space-y-6 py-24">
-        <p className="text-xs uppercase tracking-[0.22em] text-zinc-500">
-          Intelligence layer
-        </p>
-        <h1 className="text-4xl font-semibold tracking-tight text-zinc-50 sm:text-5xl">
-          Mstrmnd
-        </h1>
-        <p className="max-w-xl text-lg leading-relaxed text-zinc-400">
-          A user-owned agentic intelligence layer. Conversational onboarding seeds
-          a private profile, then powers your personal/business mastermind and
-          weekly or monthly signal reports.
-        </p>
-        <div className="flex flex-wrap gap-3 pt-2">
-          <Button asChild size="lg">
-            <Link href="/signup">Start onboarding</Link>
-          </Button>
-          <Button asChild variant="outline" size="lg">
-            <Link href="/login">I already have an account</Link>
-          </Button>
-        </div>
-      </section>
+      <div className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-8 sm:px-10">
+        <header className="animate-rise flex items-center justify-between">
+          <div className="text-xs font-semibold tracking-[0.34em] text-[var(--platinum)]">
+            MSTRMND
+          </div>
+          <div className="flex items-center gap-2">
+            {isUiPreview() ? (
+              <span className="mr-2 hidden text-[10px] uppercase tracking-[0.18em] text-zinc-500 sm:inline">
+                UI preview
+              </span>
+            ) : null}
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/login">Sign in</Link>
+            </Button>
+            <Button asChild size="sm">
+              <Link href="/signup">Get started</Link>
+            </Button>
+          </div>
+        </header>
 
-      <footer className="border-t border-zinc-900 pt-6 text-xs text-zinc-600">
-        Solo $49 · Pro $149 · Mastermind $349 — Stripe products wired next.
-      </footer>
+        <section className="flex flex-1 flex-col justify-center py-16 sm:py-24">
+          <p className="animate-rise-delay-1 mb-5 max-w-xl font-[family-name:var(--font-display)] text-5xl leading-[0.95] tracking-tight text-[var(--platinum)] sm:text-7xl md:text-8xl">
+            Mstrmnd
+          </p>
+          <h1 className="animate-rise-delay-2 max-w-2xl text-xl font-medium leading-snug tracking-tight text-zinc-100 sm:text-2xl">
+            The intelligence layer between vision and daily execution.
+          </h1>
+          <p className="animate-rise-delay-2 mt-4 max-w-xl text-base leading-relaxed text-zinc-400 sm:text-lg">
+            Seed a private profile through conversation. Then run a personal
+            mastermind with weekly and monthly signal reports that stay relevant.
+          </p>
+          <div className="animate-rise-delay-3 mt-10 flex flex-wrap gap-3">
+            <Button asChild size="lg">
+              <Link href={isUiPreview() ? "/onboarding" : "/signup"}>
+                Start onboarding
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <Link href={isUiPreview() ? "/dashboard" : "/login"}>
+                {isUiPreview() ? "View dashboard" : "I already have an account"}
+              </Link>
+            </Button>
+          </div>
+        </section>
+
+        <footer className="animate-rise-delay-3 border-t border-zinc-900/80 pt-5 text-[11px] uppercase tracking-[0.16em] text-zinc-600">
+          Solo $49 · Pro $149 · Mastermind $349
+        </footer>
+      </div>
     </main>
   );
 }

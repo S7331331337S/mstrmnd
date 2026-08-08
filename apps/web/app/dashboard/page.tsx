@@ -1,101 +1,120 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Profile } from "@mstrmnd/shared";
 import { STRIPE_TIERS } from "@mstrmnd/shared";
+import { isUiPreview, PREVIEW_PROFILE } from "@/lib/preview";
 import { createClient } from "@/lib/supabase/server";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+
+function Panel({
+  title,
+  children,
+  className = "",
+}: {
+  title: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <section
+      className={`rounded-2xl border border-zinc-800/90 bg-black/35 p-5 backdrop-blur-sm ${className}`}
+    >
+      <h2 className="mb-3 text-[11px] uppercase tracking-[0.18em] text-zinc-500">
+        {title}
+      </h2>
+      {children}
+    </section>
+  );
+}
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let profile: Profile;
 
-  if (!user) redirect("/login");
+  if (isUiPreview()) {
+    profile = PREVIEW_PROFILE;
+  } else {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  const { data } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .maybeSingle();
+    if (!user) redirect("/login");
 
-  const profile = data as Profile | null;
-  if (!profile?.onboarding_completed) redirect("/onboarding");
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    const loaded = data as Profile | null;
+    if (!loaded?.onboarding_completed) redirect("/onboarding");
+    profile = loaded;
+  }
 
   const tier = profile.subscription_tier
     ? STRIPE_TIERS[profile.subscription_tier]
     : null;
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col gap-8 px-6 py-10">
-      <header className="space-y-2">
-        <p className="text-xs tracking-[0.24em] text-zinc-500">MSTRMND · DASHBOARD</p>
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-50">
-          {profile.full_name ?? "Your mastermind"}
-        </h1>
-        <p className="text-sm text-zinc-400">
-          Private profile seeded. Signal reports and deeper agents come next.
-        </p>
-      </header>
+    <main className="hero-atmosphere relative min-h-screen overflow-hidden">
+      <div className="hero-grid absolute inset-0 opacity-35" aria-hidden />
+      <div className="relative mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-8 px-6 py-10">
+        <header className="animate-rise flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="space-y-3">
+            <Link
+              href="/"
+              className="text-xs font-semibold tracking-[0.34em] text-[var(--platinum)]"
+            >
+              MSTRMND
+            </Link>
+            <h1 className="font-[family-name:var(--font-display)] text-4xl tracking-tight text-zinc-50 sm:text-5xl">
+              {profile.full_name ?? "Your mastermind"}
+            </h1>
+            <p className="max-w-xl text-sm text-zinc-400">
+              Private profile seeded. Signal reports and deeper agents come next.
+            </p>
+          </div>
+          {isUiPreview() ? (
+            <span className="text-[10px] uppercase tracking-[0.18em] text-zinc-500">
+              UI preview · mock profile
+            </span>
+          ) : null}
+        </header>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Memory summary</CardTitle>
-            <CardDescription>Written by eve at onboarding completion.</CardDescription>
-          </CardHeader>
-          <CardContent>
+        <div className="animate-rise-delay-1 grid gap-4 md:grid-cols-2">
+          <Panel title="Memory summary" className="md:col-span-2">
             <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-300">
               {profile.memory_summary ?? "No summary yet."}
             </p>
-          </CardContent>
-        </Card>
+          </Panel>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Subscription</CardTitle>
-            <CardDescription>Stripe gating placeholder for Phase 1.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm text-zinc-300">
-            <p>
-              Tier:{" "}
-              <span className="text-zinc-100">
-                {tier ? `${tier.name} ($${tier.priceUsd}/mo)` : "Not selected"}
-              </span>
+          <Panel title="Subscription">
+            <p className="text-sm text-zinc-200">
+              {tier ? `${tier.name} · $${tier.priceUsd}/mo` : "Not selected"}
             </p>
-            <p className="text-zinc-500">
-              Products exist: Solo $49 / Pro $149 / Mastermind $349. Checkout
-              wiring is next.
+            <p className="mt-2 text-xs text-zinc-500">
+              Stripe products ready: Solo $49 / Pro $149 / Mastermind $349.
+              Checkout wiring next.
             </p>
-          </CardContent>
-        </Card>
+          </Panel>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Identity</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <pre className="overflow-x-auto text-xs text-zinc-400">
+          <Panel title="Signal preferences">
+            <pre className="overflow-x-auto text-xs leading-relaxed text-zinc-400">
+              {JSON.stringify(profile.signal_preferences ?? {}, null, 2)}
+            </pre>
+          </Panel>
+
+          <Panel title="Identity">
+            <pre className="overflow-x-auto text-xs leading-relaxed text-zinc-400">
               {JSON.stringify(profile.identity ?? {}, null, 2)}
             </pre>
-          </CardContent>
-        </Card>
+          </Panel>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Goals</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <pre className="overflow-x-auto text-xs text-zinc-400">
+          <Panel title="Goals">
+            <pre className="overflow-x-auto text-xs leading-relaxed text-zinc-400">
               {JSON.stringify(profile.goals ?? {}, null, 2)}
             </pre>
-          </CardContent>
-        </Card>
+          </Panel>
+        </div>
       </div>
     </main>
   );
