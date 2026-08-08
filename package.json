@@ -3,8 +3,11 @@
   "private": true,
   "scripts": {
     "dev": "turbo dev",
-    "build": "tsc --noEmit",
-    "typecheck": "tsc --noEmit",
+    "dev:web": "pnpm --filter @mstrmnd/web dev",
+    "dev:eve": "pnpm --filter @mstrmnd/intelligence-gathering dev",
+    "build": "turbo build",
+    "typecheck:contracts": "tsc --noEmit -p tsconfig.contracts.json",
+    "typecheck": "pnpm typecheck:contracts && pnpm --filter @mstrmnd/web typecheck && pnpm --filter @mstrmnd/intelligence-gathering typecheck",
     "doctrine:sync": "python3 scripts/sync-doctrine.py",
     "doctrine:validate": "python3 scripts/validate-doctrine.py",
     "doctrine:ci": "python3 scripts/validate-doctrine.py --fixture",
