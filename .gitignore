@@ -3,6 +3,11 @@ node_modules/
 .DS_Store
 *.log
 
+# Python
+__pycache__/
+*.pyc
+.venv/
+
 # Local env
 .env
 .env.doctrine
