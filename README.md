@@ -1,79 +1,78 @@
-# MSTRMND
+# Mstrmnd
 
-**Flagship monorepo for the MSTRMND intelligence layer.**
+User-owned agentic intelligence layer.
+
+Conversational onboarding seeds a private profile, then powers a personal/business mastermind and weekly/monthly signal reports.
 
 > MSTRMND installs the intelligence layer between a company's vision and its daily execution.
 
-Models change. The intelligence layer persists.
-
-This repository is the primary product home for MSTRMND: canonical Phase 1 foundation, stable runtime contracts, and the path to Operator Zero execution.
-
-## Phase 1 — Foundation (this PR)
-
-Phase 1 establishes what every human and agent needs before runtime work expands:
-
-| Deliverable | Location |
-|---|---|
-| Company canon & philosophy | `fixtures/doctrine-min/company/` |
-| Positioning & commercial doctrine | `fixtures/doctrine-min/strategy/`, `commercial/` |
-| Intelligence architecture + governance | `fixtures/doctrine-min/platform/` |
-| Agent / skill / connector standards | `fixtures/doctrine-min/agents/`, `skills/`, `connectors/` |
-| Stable runtime schemas | `packages/schemas` (`@mstrmnd/schemas`) |
-| Doctrine pin + CI gate | `doctrine.pin.json`, `pnpm verify` |
-
-**Completion test:** a new human or agent can explain what MSTRMND is, how it operates, what it sells, and what rules govern its systems — and TypeScript contracts exist for scope, provenance, audit, and policy.
-
-## Repository map
-
-| Repository | Role |
-|---|---|
-| **`mstrmnd` (this repo)** | Flagship product monorepo — foundation, schemas, future apps/packages |
-| [`mstrmnd.md`](https://github.com/S7331331337S/mstrmnd.md) | Canonical doctrine source of truth (pinned here via `doctrine.pin.json`) |
-| [`mstrmnd-core`](https://github.com/S7331331337S/mstrmnd-core) | Existing Operator Zero runtime (Hermes, MCP, memory) — reference implementation |
-
-When doctrine and implementation conflict, update `mstrmnd.md` first, bump the pin here, then adopt in code.
-
 ## Stack
 
-- **pnpm 10+ / Node 20+ / TypeScript / turbo**
-- Workspace packages under `packages/*` (and later `apps/*`)
+| Layer | Choice |
+|---|---|
+| Frontend | Next.js App Router (`apps/web`) on Vercel |
+| Auth + DB + RLS | Supabase |
+| Agent runtime | eve (`agents/intelligence-gathering`, `agents/signal-report`) on Vercel |
+| Models | Vercel AI Gateway |
+| Durability | Vercel Workflows (via eve) |
+| External tools | Vercel Connect |
+| Payments | Stripe — Solo $49 / Pro $149 / Mastermind $349 |
+| UI | AI SDK UI primitives + shadcn/ui |
+
+## Structure
+
+```text
+apps/web/                         Next.js App Router
+agents/intelligence-gathering/    eve Intelligence Gathering Agent
+agents/signal-report/             eve Signal Report Agent
+packages/shared/                  shared profile/types
+packages/schemas/                 runtime contract types (retained)
+supabase/migrations/              SQL + RLS
+docs/
+  architecture.md
+  schema.md
+  eve-tools.md
+  signal-report-tools.md
+```
+
+## Phase 1 status
+
+**Foundation complete**
+
+- [x] Supabase initial schema + RLS + profile auto-create trigger
+- [x] eve intelligence-gathering agent (`instructions.md` + 6 tools)
+- [x] eve signal-report agent (`instructions.md` + 4 tools)
+- [x] Next.js: `/`, `/login`, `/signup`, `/onboarding`, `/dashboard`, `/pricing`
+- [x] Chat persistence + Stripe checkout/webhook scaffolding
+- [x] Dashboard signal reports panel (preview + live trigger)
+- [x] Docs for architecture, schema, eve tools, signal-report tools
 
 ## Commands
 
 ```bash
 pnpm install
-pnpm typecheck          # TypeScript verify
-pnpm doctrine:ci        # doctrine pin + fixture self-test
-pnpm verify             # typecheck + doctrine:ci
-pnpm doctrine:sync      # sync pinned doctrine (needs access to mstrmnd.md)
-pnpm doctrine:validate  # validate pin / generated manifest
+
+# 1) Database
+supabase start
+supabase db reset   # applies supabase/migrations
+
+# 2) Agents (eve)
+pnpm --filter @mstrmnd/intelligence-gathering dev   # :3001
+pnpm --filter @mstrmnd/signal-report dev             # :3002
+
+# 3) Web
+pnpm --filter @mstrmnd/web dev
 ```
 
-## Layout
+Copy env templates:
 
-```text
-packages/schemas/     @mstrmnd/schemas — Phase 1 runtime contracts
-fixtures/doctrine-min CI / offline doctrine tree (not hand-edited as canon)
-scripts/              doctrine sync + validate
-docs/MASTER.md        shared agent brief + backlog
-AGENTS.md             hard invariants for coding agents
-doctrine.pin.json     pinned mstrmnd.md commit
-```
+- `apps/web/.env.local.example` → `apps/web/.env.local`
+- `agents/intelligence-gathering/.env.example` → `agents/intelligence-gathering/.env`
+- `agents/signal-report/.env.example` → `agents/signal-report/.env`
 
-## Operating loop
+## Docs
 
-```text
-Vision
-  → Context + Memory
-  → Planning
-  → Orchestration
-  → Execution
-  → Evaluation
-  → Learning
-  ↺
-```
-
-## License / contact
-
-- Public site: https://mstrmnd.ai
-- hello@mstrmnd.ai
+- [`docs/architecture.md`](docs/architecture.md)
+- [`docs/schema.md`](docs/schema.md)
+- [`docs/eve-tools.md`](docs/eve-tools.md)
+- [`docs/signal-report-tools.md`](docs/signal-report-tools.md)

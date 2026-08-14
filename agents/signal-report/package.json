@@ -1,0 +1,26 @@
+{
+  "name": "@mstrmnd/signal-report",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "eve dev",
+    "start": "eve start",
+    "build": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mstrmnd/shared": "workspace:*",
+    "@supabase/supabase-js": "^2.49.1",
+    "ai": "^7.0.38",
+    "eve": "^0.31.3",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "typescript": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
