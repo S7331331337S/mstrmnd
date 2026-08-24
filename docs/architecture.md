@@ -4,7 +4,7 @@
 
 | Layer | Choice |
 |---|---|
-| Frontend | Next.js App Router on Vercel (`apps/web`) |
+| Frontend | Next.js 16.3 App Router on Vercel (`apps/web`) |
 | Auth + DB + RLS | Supabase |
 | Agent runtime | eve on Vercel (`agents/intelligence-gathering`) |
 | Models | Vercel AI Gateway |
@@ -59,7 +59,7 @@ User
 ## Monorepo layout
 
 ```text
-apps/web                         Next.js
+apps/web                         Next.js 16.3
 agents/intelligence-gathering    eve onboarding agent
 agents/signal-report             eve signal report agent
 packages/shared                  shared TS types

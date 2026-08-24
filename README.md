@@ -10,7 +10,7 @@ Conversational onboarding seeds a private profile, then powers a personal/busine
 
 | Layer | Choice |
 |---|---|
-| Frontend | Next.js App Router (`apps/web`) on Vercel |
+| Frontend | Next.js 16.3 App Router (`apps/web`) on Vercel |
 | Auth + DB + RLS | Supabase |
 | Agent runtime | eve (`agents/intelligence-gathering`, `agents/signal-report`) on Vercel |
 | Models | Vercel AI Gateway |
@@ -22,7 +22,7 @@ Conversational onboarding seeds a private profile, then powers a personal/busine
 ## Structure
 
 ```text
-apps/web/                         Next.js App Router
+apps/web/                         Next.js 16.3 App Router
 agents/intelligence-gathering/    eve Intelligence Gathering Agent
 agents/signal-report/             eve Signal Report Agent
 packages/shared/                  shared profile/types

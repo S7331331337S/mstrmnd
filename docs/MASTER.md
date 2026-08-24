@@ -12,7 +12,7 @@ Build **Mstrmnd** as a user-owned agentic intelligence layer:
 
 ## Locked stack
 
-Next.js App Router + Supabase + eve + AI Gateway + Vercel Workflows + Connect + Stripe + shadcn.
+Next.js 16.3 App Router + Supabase + eve + AI Gateway + Vercel Workflows + Connect + Stripe + shadcn.
 
 Do **not** invent alternative stacks.
 
