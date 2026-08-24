@@ -79,8 +79,8 @@ Copy env templates:
 
 ## Deploy
 
-GitHub: [S7331331337S/mstrmnd](https://github.com/S7331331337S/mstrmnd)
+Production: [https://mstrmnd-web.vercel.app](https://mstrmnd-web.vercel.app)
 
-Create a Vercel project with **Root Directory** `apps/web` (Next.js, pnpm workspace). `apps/web/vercel.json` sets install/build for the monorepo.
+GitHub: [S7331331337S/mstrmnd](https://github.com/S7331331337S/mstrmnd) · Vercel project `mstrmnd-web` with **Root Directory** `apps/web`. `apps/web/vercel.json` sets install/build for the monorepo.
 
-Until Supabase/Stripe/eve are bound, set `NEXT_PUBLIC_UI_PREVIEW=1` so `/`, `/onboarding`, `/dashboard`, and `/pricing` are browseable.
+Until Supabase/Stripe/eve are bound, `NEXT_PUBLIC_UI_PREVIEW=1` keeps `/`, `/onboarding`, `/dashboard`, and `/pricing` browseable.
