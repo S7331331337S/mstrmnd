@@ -6,7 +6,7 @@ User-owned agentic intelligence layer.
 
 ## Locked stack
 
-- Frontend: Next.js App Router on Vercel (`apps/web`)
+- Frontend: Next.js 16.3 App Router on Vercel (`apps/web`)
 - Auth + DB + RLS: Supabase
 - Agent runtime: eve (`agents/intelligence-gathering`, `agents/signal-report`)
 - Models: Vercel AI Gateway

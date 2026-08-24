@@ -5,7 +5,7 @@ Locked scaffold for Mstrmnd:
 1. Supabase schema + RLS (`supabase/migrations/00001_initial_schema.sql`)
 2. eve Intelligence Gathering Agent + six profile tools
 3. eve Signal Report Agent + four report tools
-4. Next.js App Router skeleton with auth, onboarding chat, dashboard, pricing
+4. Next.js 16.3 App Router skeleton with auth, onboarding chat, dashboard, pricing
 5. Docs: architecture, schema, eve-tools, signal-report-tools
 
 ## Exit criteria

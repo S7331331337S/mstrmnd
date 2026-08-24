@@ -10,7 +10,7 @@ Conversational onboarding seeds a private profile, then powers a personal/busine
 
 | Layer | Choice |
 |---|---|
-| Frontend | Next.js App Router (`apps/web`) on Vercel |
+| Frontend | Next.js 16.3 App Router (`apps/web`) on Vercel |
 | Auth + DB + RLS | Supabase |
 | Agent runtime | eve (`agents/intelligence-gathering`, `agents/signal-report`) on Vercel |
 | Models | Vercel AI Gateway |
@@ -22,7 +22,7 @@ Conversational onboarding seeds a private profile, then powers a personal/busine
 ## Structure
 
 ```text
-apps/web/                         Next.js App Router
+apps/web/                         Next.js 16.3 App Router
 agents/intelligence-gathering/    eve Intelligence Gathering Agent
 agents/signal-report/             eve Signal Report Agent
 packages/shared/                  shared profile/types
@@ -76,3 +76,11 @@ Copy env templates:
 - [`docs/schema.md`](docs/schema.md)
 - [`docs/eve-tools.md`](docs/eve-tools.md)
 - [`docs/signal-report-tools.md`](docs/signal-report-tools.md)
+
+## Deploy
+
+Production: [https://mstrmnd-web.vercel.app](https://mstrmnd-web.vercel.app)
+
+GitHub: [S7331331337S/mstrmnd](https://github.com/S7331331337S/mstrmnd) · Vercel project `mstrmnd-web` with **Root Directory** `apps/web`. `apps/web/vercel.json` sets install/build for the monorepo.
+
+Until Supabase/Stripe/eve are bound, `NEXT_PUBLIC_UI_PREVIEW=1` keeps `/`, `/onboarding`, `/dashboard`, and `/pricing` browseable.
