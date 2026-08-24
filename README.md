@@ -76,3 +76,11 @@ Copy env templates:
 - [`docs/schema.md`](docs/schema.md)
 - [`docs/eve-tools.md`](docs/eve-tools.md)
 - [`docs/signal-report-tools.md`](docs/signal-report-tools.md)
+
+## Deploy
+
+GitHub: [S7331331337S/mstrmnd](https://github.com/S7331331337S/mstrmnd)
+
+Create a Vercel project with **Root Directory** `apps/web` (Next.js, pnpm workspace). `apps/web/vercel.json` sets install/build for the monorepo.
+
+Until Supabase/Stripe/eve are bound, set `NEXT_PUBLIC_UI_PREVIEW=1` so `/`, `/onboarding`, `/dashboard`, and `/pricing` are browseable.
