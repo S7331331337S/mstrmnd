@@ -2,5 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "cd ../.. && pnpm install --frozen-lockfile --filter @mstrmnd/canvas...",
   "buildCommand": "cd ../.. && pnpm --filter @mstrmnd/canvas build",
-  "ignoreCommand": "cd ../.. && pnpm exec turbo-ignore @mstrmnd/canvas"
+  "ignoreCommand": "cd ../.. && npx --yes turbo-ignore @mstrmnd/canvas"
 }
