@@ -14,6 +14,7 @@ User-owned agentic intelligence layer.
 - External tools: Vercel Connect
 - Payments: Stripe (Solo $49 / Pro $149 / Mastermind $349)
 - UI: AI SDK UI primitives + shadcn/ui
+- Runtime: Node.js 24 (CI). Engines floor `>=20.9.0`.
 
 **Do not invent alternative stacks.**
 

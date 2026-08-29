@@ -18,6 +18,7 @@ Conversational onboarding seeds a private profile, then powers a personal/busine
 | External tools | Vercel Connect |
 | Payments | Stripe — Solo $49 / Pro $149 / Mastermind $349 |
 | UI | AI SDK UI primitives + shadcn/ui |
+| Runtime | Node.js 24 (CI). Engines floor remains `>=20.9.0`. |
 
 ## Structure
 
