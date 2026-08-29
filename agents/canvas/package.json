@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "eve dev",
     "start": "eve start",
-    "build": "tsc --noEmit",
+    "build": "eve build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

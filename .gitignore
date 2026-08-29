@@ -24,5 +24,7 @@ __pycache__/
 # Runtime runs + audit
 .mstrmnd/
 
-# Vercel
+# Vercel / eve build output
 .vercel/
+.output/
+.eve/

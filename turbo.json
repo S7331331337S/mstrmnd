@@ -3,7 +3,20 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "env": [
+        "VERCEL",
+        "SUPABASE_URL",
+        "SUPABASE_ANON_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "AI_GATEWAY_API_KEY",
+        "PORT"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        ".vercel/output/**",
+        ".output/**"
+      ]
     },
     "dev": {
       "cache": false,
