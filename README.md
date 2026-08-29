@@ -12,12 +12,13 @@ Conversational onboarding seeds a private profile, then powers a personal/busine
 |---|---|
 | Frontend | Next.js 16.3 App Router (`apps/web`) on Vercel |
 | Auth + DB + RLS | Supabase |
-| Agent runtime | eve (`agents/intelligence-gathering`, `agents/signal-report`) on Vercel |
+| Agent runtime | eve (`agents/intelligence-gathering`, `agents/signal-report`, `agents/canvas`) on Vercel |
 | Models | Vercel AI Gateway |
 | Durability | Vercel Workflows (via eve) |
 | External tools | Vercel Connect |
 | Payments | Stripe — Solo $49 / Pro $149 / Mastermind $349 |
 | UI | AI SDK UI primitives + shadcn/ui |
+| Runtime | Node.js 24 (CI). Engines floor remains `>=20.9.0`. |
 
 ## Structure
 
@@ -25,6 +26,7 @@ Conversational onboarding seeds a private profile, then powers a personal/busine
 apps/web/                         Next.js 16.3 App Router
 agents/intelligence-gathering/    eve Intelligence Gathering Agent
 agents/signal-report/             eve Signal Report Agent
+agents/canvas/                    eve Content Engine CANVAS (creation seat)
 packages/shared/                  shared profile/types
 packages/schemas/                 runtime contract types (retained)
 supabase/migrations/              SQL + RLS
@@ -33,6 +35,7 @@ docs/
   schema.md
   eve-tools.md
   signal-report-tools.md
+  canvas.md
 ```
 
 ## Phase 1 status
@@ -46,6 +49,7 @@ docs/
 - [x] Chat persistence + Stripe checkout/webhook scaffolding
 - [x] Dashboard signal reports panel (preview + live trigger)
 - [x] Docs for architecture, schema, eve tools, signal-report tools
+- [x] Content Engine CANVAS eve agent (`ce_jobs` / `ce_items`, parallel text + visual-spec drafts)
 
 ## Commands
 
@@ -59,6 +63,7 @@ supabase db reset   # applies supabase/migrations
 # 2) Agents (eve)
 pnpm --filter @mstrmnd/intelligence-gathering dev   # :3001
 pnpm --filter @mstrmnd/signal-report dev             # :3002
+pnpm --filter @mstrmnd/canvas dev                    # :3003
 
 # 3) Web
 pnpm --filter @mstrmnd/web dev
@@ -69,6 +74,7 @@ Copy env templates:
 - `apps/web/.env.local.example` → `apps/web/.env.local`
 - `agents/intelligence-gathering/.env.example` → `agents/intelligence-gathering/.env`
 - `agents/signal-report/.env.example` → `agents/signal-report/.env`
+- `agents/canvas/.env.example` → `agents/canvas/.env`
 
 ## Docs
 
@@ -76,6 +82,7 @@ Copy env templates:
 - [`docs/schema.md`](docs/schema.md)
 - [`docs/eve-tools.md`](docs/eve-tools.md)
 - [`docs/signal-report-tools.md`](docs/signal-report-tools.md)
+- [`docs/canvas.md`](docs/canvas.md)
 
 ## Deploy
 

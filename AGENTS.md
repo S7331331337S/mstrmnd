@@ -8,12 +8,13 @@ User-owned agentic intelligence layer.
 
 - Frontend: Next.js 16.3 App Router on Vercel (`apps/web`)
 - Auth + DB + RLS: Supabase
-- Agent runtime: eve (`agents/intelligence-gathering`, `agents/signal-report`)
+- Agent runtime: eve (`agents/intelligence-gathering`, `agents/signal-report`, `agents/canvas`)
 - Models: Vercel AI Gateway
 - Durability: Vercel Workflows (via eve)
 - External tools: Vercel Connect
 - Payments: Stripe (Solo $49 / Pro $149 / Mastermind $349)
 - UI: AI SDK UI primitives + shadcn/ui
+- Runtime: Node.js 24 (CI). Engines floor `>=20.9.0`.
 
 **Do not invent alternative stacks.**
 
@@ -24,6 +25,7 @@ pnpm install
 pnpm verify
 pnpm --filter @mstrmnd/intelligence-gathering dev
 pnpm --filter @mstrmnd/signal-report dev
+pnpm --filter @mstrmnd/canvas dev
 pnpm --filter @mstrmnd/web dev
 ```
 
@@ -40,6 +42,7 @@ pnpm --filter @mstrmnd/web dev
 - `apps/web` — Next.js
 - `agents/intelligence-gathering` — eve onboarding agent
 - `agents/signal-report` — eve signal report agent
+- `agents/canvas` — eve Content Engine CANVAS (multi-format drafts)
 - `packages/shared` — shared types
 - `supabase/migrations` — SQL
 - `docs/` — architecture, schema, eve-tools, signal-report-tools

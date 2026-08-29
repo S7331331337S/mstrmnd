@@ -1,6 +1,6 @@
 # Schema
 
-Source of truth: `supabase/migrations/00001_initial_schema.sql`.
+Source of truth: `supabase/migrations/00001_initial_schema.sql` and `supabase/migrations/00002_content_engine.sql`.
 
 ## Tables
 
@@ -35,9 +35,24 @@ Triggers:
   - `highlights`, `watchlist`, `decisions`, optional `risks` / `sources`
 - Written by the signal-report eve agent (service role); users SELECT/INSERT/UPDATE own via RLS
 
+### `ce_jobs`
+- Content Engine jobs. DESK-shaped: `source`, `touchpoint`, `template`, `voice` (`labs`|`operator`), `thesis`, `scout_packet` jsonb, `formats` text[]
+- `status`: `queued` | `research` | `drafting` | `gating` | `awaiting_approval` | `published` | `killed`
+- Owned by `user_id` → `profiles.id`
+- Written by the canvas eve agent (service role)
+
+### `ce_items`
+- One draft per format for a job (`press_card`, `linkedin`, `visual_spec`, …)
+- `body` holds the draft; `content_ref` is `ce_items/{id}`
+- `status`: `drafted` | `indexed` | `rejected`
+- CANVAS indexes after draft; CIPHER / HERALD tables exist but have no writers in this slice
+
+### `ce_gates` / `ce_publications` / `ce_metrics_daily`
+- Schema only. CIPHER, HERALD, and AXIOM are deferred. Do not invent a second jobs table.
+
 ## RLS
 
-All four tables have RLS enabled.
+Core tables have RLS enabled.
 
 | Table | Ownership key | Policies |
 |---|---|---|
@@ -45,8 +60,10 @@ All four tables have RLS enabled.
 | `conversations` | `user_id = auth.uid()` | SELECT / INSERT / UPDATE own |
 | `messages` | `user_id = auth.uid()` | SELECT / INSERT / UPDATE own |
 | `signal_reports` | `user_id = auth.uid()` | SELECT / INSERT / UPDATE own |
+| `ce_jobs` | `user_id = auth.uid()` | SELECT / INSERT / UPDATE own |
+| `ce_items` | `user_id = auth.uid()` | SELECT / INSERT / UPDATE own |
 
-Eve agents use the **service role** key for profile merges (onboarding) and signal report writes. Service role bypasses RLS by design.
+Eve agents use the **service role** key for profile merges (onboarding), signal report writes, and CANVAS `ce_jobs` / `ce_items` writes. Service role bypasses RLS by design.
 
 ## Example profile JSON
 

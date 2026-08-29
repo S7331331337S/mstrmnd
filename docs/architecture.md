@@ -6,7 +6,7 @@
 |---|---|
 | Frontend | Next.js 16.3 App Router on Vercel (`apps/web`) |
 | Auth + DB + RLS | Supabase |
-| Agent runtime | eve on Vercel (`agents/intelligence-gathering`) |
+| Agent runtime | eve on Vercel (`agents/intelligence-gathering`, `agents/signal-report`, `agents/canvas`) |
 | Models | Vercel AI Gateway |
 | Durability | Vercel Workflows (via eve) |
 | External tools | Vercel Connect |
@@ -40,12 +40,18 @@ User
   └─ /dashboard ──► protected; requires onboarding_completed
                          │
                          ├─ subscription panel
-                         └─ signal reports ← POST /api/signal-reports/generate
-                                │
-                                ▼
-                         eve signal-report agent (Bearer JWT)
-                                │
-                                └─ tools → signal_reports (service role)
+                         ├─ signal reports ← POST /api/signal-reports/generate
+                         │                      │
+                         │                      ▼
+                         │              eve signal-report agent (Bearer JWT)
+                         │                      │
+                         │                      └─ tools → signal_reports (service role)
+                         └─ CANVAS drafts ← POST /api/canvas/run
+                                                │
+                                                ▼
+                                        eve canvas agent (Bearer JWT)
+                                                │
+                                                └─ tools → ce_jobs / ce_items (service role)
 ```
 
 ## Boundaries
@@ -53,6 +59,7 @@ User
 - **Web** owns UX, Supabase SSR auth, message persistence, and calling the eve HTTP session APIs.
 - **eve intelligence-gathering** owns conversational onboarding and profile writes via the Supabase **service role**.
 - **eve signal-report** owns weekly/monthly report generation into `signal_reports` via the service role.
+- **eve canvas** owns Content Engine creation (parallel format drafts into `ce_jobs` / `ce_items`) via the service role. CIPHER / HERALD / Slack approval are not in this slice.
 - **Supabase** owns identity, persistence, and row-level security.
 - **Stripe** Checkout + webhook write `subscription_tier` / customer ids on `profiles`.
 
@@ -62,6 +69,7 @@ User
 apps/web                         Next.js 16.3
 agents/intelligence-gathering    eve onboarding agent
 agents/signal-report             eve signal report agent
+agents/canvas                    eve Content Engine CANVAS
 packages/shared                  shared TS types
 packages/schemas                 earlier contract package (retained)
 supabase/migrations              SQL + RLS

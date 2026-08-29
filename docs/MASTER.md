@@ -27,6 +27,7 @@ Do **not** invent alternative stacks.
 - [x] Stripe checkout wiring (Solo/Pro/Mastermind + webhook → profile)
 - [x] Persist onboarding messages into `conversations` / `messages`
 - [x] Signal report generation agent
+- [x] Content Engine CANVAS agent (creation seat; CIPHER/HERALD deferred)
 
 ## Hard invariants
 
@@ -39,5 +40,5 @@ Do **not** invent alternative stacks.
 ## Status stamp
 
 - **Last aligned:** 2026-08-08
-- **Priority:** Phase 1 foundation complete
-- **Next:** Phase 2 — live binds (Vercel/Supabase/Stripe) + cadence automation
+- **Priority:** Phase 1 foundation complete; CANVAS creation seat landed
+- **Next:** CIPHER gate + Slack one-tap; live binds (Vercel/Supabase/Stripe) + cadence automation
