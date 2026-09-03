@@ -65,6 +65,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("onboarding_completed")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (!profile?.onboarding_completed) {
+      return NextResponse.json(
+        { error: "Complete onboarding before starting a CANVAS job" },
+        { status: 400 },
+      );
+    }
+
     const lines = [
       `Run a CANVAS job.`,
       `template=${template}`,
