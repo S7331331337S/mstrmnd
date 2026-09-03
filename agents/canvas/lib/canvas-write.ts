@@ -9,7 +9,7 @@ import type {
   ScoutPacket,
 } from "@mstrmnd/shared";
 import { DEFAULT_CANVAS_FORMATS } from "@mstrmnd/shared";
-import { planCanvasJob, type CanvasPlan } from "./fanout";
+import { computeCanvasPlanSteps, planCanvasJob, type CanvasPlan } from "./fanout";
 import { loadVoiceBible } from "./canon";
 import { getServiceSupabase } from "./supabase";
 import { assertVoice } from "./voice";
@@ -27,6 +27,12 @@ export async function startCanvasJob(params: {
 }): Promise<{ job: CanvasJob; plan: CanvasPlan; bible: string }> {
   const supabase = getServiceSupabase();
   const formats = params.formats?.length ? params.formats : DEFAULT_CANVAS_FORMATS;
+
+  // Validate that the requested formats resolve to an executable plan BEFORE
+  // inserting the ce_jobs row, so invalid input does not leave an orphaned
+  // "drafting" job persisted with no items and no way to progress.
+  computeCanvasPlanSteps({ formats, scoutPacket: params.scoutPacket ?? {} });
+
   const { data, error } = await supabase
     .from("ce_jobs")
     .insert({
