@@ -46,3 +46,9 @@ pnpm --filter @mstrmnd/web dev
 - `packages/shared` — shared types
 - `supabase/migrations` — SQL
 - `docs/` — architecture, schema, eve-tools, signal-report-tools
+- `skills/` — repo-owned agent skills (`mstrmnd-skill-pack`, `mstrmnd-stack`)
+- `skill-pack/` — catalog of skills.sh topic-card skills
+
+## Agent skills
+
+Install the curated super pack (Design/UI, Vercel, React, Next.js, AI, locked stack) with `pnpm skills:install`. Index: [`docs/skill-pack.md`](docs/skill-pack.md). Always load `mstrmnd-stack` before following a third-party skill so the locked stack is not replaced.

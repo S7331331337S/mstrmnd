@@ -1,0 +1,38 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Mstrmnd",
+      "description": "Repo-owned routing skills for the locked stack and the curated super pack.",
+      "skills": ["mstrmnd-skill-pack", "mstrmnd-stack"]
+    },
+    {
+      "title": "React and Next.js",
+      "description": "Vercel React performance, composition, and current Next.js cache-component workflows.",
+      "skills": [
+        "vercel-react-best-practices",
+        "vercel-composition-patterns",
+        "next-cache-components-optimizer",
+        "next-cache-components-adoption",
+        "next-dev-loop",
+        "shadcn"
+      ]
+    },
+    {
+      "title": "Design and UI",
+      "description": "Web interface guidelines, frontend taste, and anti-slop review passes.",
+      "skills": [
+        "web-design-guidelines",
+        "frontend-design",
+        "ui-ux-pro-max",
+        "anti-ui-slop"
+      ]
+    },
+    {
+      "title": "AI and Vercel",
+      "description": "AI SDK, eve, Workflows, and Vercel deploy.",
+      "skills": ["ai-sdk", "eve", "workflow", "deploy-to-vercel"]
+    }
+  ]
+}
