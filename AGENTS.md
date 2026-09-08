@@ -47,4 +47,10 @@ pnpm --filter @mstrmnd/web dev
 - `supabase/migrations` — SQL
 - `docs/` — architecture, schema, eve-tools, signal-report-tools
 - `.cursor/mcp.json` — hosted Supabase MCP (project `qqcrngshszhgluhvrkqi`)
-- `.agents/skills/` — Supabase agent skills (`supabase`, `supabase-postgres-best-practices`)
+- `.agents/skills/` — installed agent skills (including Supabase and the checked-in super pack)
+- `skills/` — repo-owned agent skills (`mstrmnd-skill-pack`, `mstrmnd-stack`)
+- `skill-pack/` — catalog of skills.sh topic-card skills
+
+## Agent skills
+
+Install the curated super pack (Design/UI, Vercel, React, Next.js, AI, locked stack) with `pnpm skills:install`. Index: [`docs/skill-pack.md`](docs/skill-pack.md). Always load `mstrmnd-stack` before following a third-party skill so the locked stack is not replaced.

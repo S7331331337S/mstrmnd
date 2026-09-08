@@ -36,6 +36,10 @@ docs/
   eve-tools.md
   signal-report-tools.md
   canvas.md
+  skill-pack.md
+skill-pack/                   skills.sh topic catalog + installer profile
+skills/                       repo-owned routers (mstrmnd-skill-pack, mstrmnd-stack)
+.agents/skills/               installed super pack (Cursor + shared agents)
 ```
 
 ## Phase 1 status
@@ -67,6 +71,9 @@ pnpm --filter @mstrmnd/canvas dev                    # :3003
 
 # 3) Web
 pnpm --filter @mstrmnd/web dev
+
+# 4) Agent skills (optional refresh)
+pnpm skills:install
 ```
 
 Copy env templates:
@@ -83,6 +90,7 @@ Copy env templates:
 - [`docs/eve-tools.md`](docs/eve-tools.md)
 - [`docs/signal-report-tools.md`](docs/signal-report-tools.md)
 - [`docs/canvas.md`](docs/canvas.md)
+- [`docs/skill-pack.md`](docs/skill-pack.md) — agent skill super pack (Design/UI, Vercel, React, Next.js, AI)
 
 ## Deploy
 
