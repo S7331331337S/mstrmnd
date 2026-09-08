@@ -46,3 +46,5 @@ pnpm --filter @mstrmnd/web dev
 - `packages/shared` — shared types
 - `supabase/migrations` — SQL
 - `docs/` — architecture, schema, eve-tools, signal-report-tools
+- `.cursor/mcp.json` — hosted Supabase MCP (project `qqcrngshszhgluhvrkqi`)
+- `.agents/skills/` — Supabase agent skills (`supabase`, `supabase-postgres-best-practices`)
