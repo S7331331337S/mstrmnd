@@ -3,7 +3,43 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "env": [
+        "VERCEL",
+        "VERCEL_ENV",
+        "VERCEL_URL",
+        "SUPABASE_URL",
+        "SUPABASE_ANON_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "AI_GATEWAY_API_KEY",
+        "PORT",
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "NEXT_PUBLIC_UI_PREVIEW",
+        "NEXT_PUBLIC_EVE_URL",
+        "NEXT_PUBLIC_SIGNAL_EVE_URL",
+        "NEXT_PUBLIC_CANVAS_EVE_URL",
+        "NEXT_PUBLIC_SITE_URL",
+        "STRIPE_SECRET_KEY",
+        "STRIPE_WEBHOOK_SECRET",
+        "STRIPE_PRICE_SOLO",
+        "STRIPE_PRICE_PRO",
+        "STRIPE_PRICE_MASTERMIND",
+        "MSTRMND_DEV_USER_ID"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!.eve/**",
+        "!.vercel/output/**",
+        "!.output/**",
+        "!.next/**",
+        "!.turbo/**"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        ".vercel/output/**",
+        ".output/**"
+      ]
     },
     "dev": {
       "cache": false,

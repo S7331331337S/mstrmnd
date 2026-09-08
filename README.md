@@ -18,7 +18,7 @@ Conversational onboarding seeds a private profile, then powers a personal/busine
 | External tools | Vercel Connect |
 | Payments | Stripe — Solo $49 / Pro $149 / Mastermind $349 |
 | UI | AI SDK UI primitives + shadcn/ui |
-| Runtime | Node.js 24 (CI). Engines floor remains `>=20.9.0`. |
+| Runtime | Node.js 24 (`engines.node` `>=24`, required by eve) |
 
 ## Structure
 
@@ -94,8 +94,15 @@ Copy env templates:
 
 ## Deploy
 
-Production: [https://mstrmnd-web.vercel.app](https://mstrmnd-web.vercel.app)
+Each Vercel project uses a package **Root Directory** plus that package's `vercel.json` (filtered pnpm install, package `build`, `turbo-ignore`). Eve projects must run `eve build` — do not set Output Directory to `.output`.
 
-GitHub: [S7331331337S/mstrmnd](https://github.com/S7331331337S/mstrmnd) · Vercel project `mstrmnd-web` with **Root Directory** `apps/web`. `apps/web/vercel.json` sets install/build for the monorepo.
+| Vercel project | Root Directory | Build |
+|---|---|---|
+| `mstrmnd-web` | `apps/web` | `next build` |
+| intelligence-gathering | `agents/intelligence-gathering` | `eve build` |
+| signal-report | `agents/signal-report` | `eve build` |
+| `canvas` | `agents/canvas` | `eve build` |
+
+Production web: [https://mstrmnd-web.vercel.app](https://mstrmnd-web.vercel.app)
 
 Until Supabase/Stripe/eve are bound, `NEXT_PUBLIC_UI_PREVIEW=1` keeps `/`, `/onboarding`, `/dashboard`, and `/pricing` browseable.

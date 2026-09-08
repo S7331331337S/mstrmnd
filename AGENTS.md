@@ -46,6 +46,8 @@ pnpm --filter @mstrmnd/web dev
 - `packages/shared` — shared types
 - `supabase/migrations` — SQL
 - `docs/` — architecture, schema, eve-tools, signal-report-tools
+- `.cursor/mcp.json` — hosted Supabase MCP (project `qqcrngshszhgluhvrkqi`)
+- `.agents/skills/` — installed agent skills (including Supabase and the checked-in super pack)
 - `skills/` — repo-owned agent skills (`mstrmnd-skill-pack`, `mstrmnd-stack`)
 - `skill-pack/` — catalog of skills.sh topic-card skills
 

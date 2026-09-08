@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "cd ../.. && pnpm install --frozen-lockfile --filter @mstrmnd/intelligence-gathering...",
+  "buildCommand": "cd ../.. && pnpm --filter @mstrmnd/intelligence-gathering build",
+  "ignoreCommand": "cd ../.. && npx --yes turbo-ignore @mstrmnd/intelligence-gathering"
+}

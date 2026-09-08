@@ -58,7 +58,7 @@ export interface CanvasItem {
   body: string | null;
   content_ref: string | null;
   model_used: string | null;
-  cost_usd: number | null;
+  cost_usd: string | null;
   status: CanvasItemStatus;
   metadata: Record<string, unknown>;
   created_at: string;
