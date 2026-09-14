@@ -11,12 +11,14 @@ npx skills find <query>
 ## Install
 
 ```bash
-pnpm skills:install          # core: design/ui + vercel + react + next + ai + locked stack
-pnpm skills:install:full     # every skill listed on the eight topic cards
-pnpm skills:list             # show what is installed
+pnpm skills:install            # core: design/ui + vercel + react + next + ai + locked stack
+pnpm skills:install:full       # every skill listed on the eight topic cards
+pnpm skills:install:full-only  # remaining topic-card skills not in core
+pnpm skills:update             # refresh installed skills
+pnpm skills:list               # show what is installed
 ```
 
-Core is what this repo actually uses. Full is the complete topic-card harvest for other agents.
+Core is what this repo actually uses. Full is the complete topic-card harvest for other agents. After `--full-only`, this checkout has **176** installed skills.
 
 ## Forks
 
@@ -74,4 +76,4 @@ after this branch is on the default remote.
 
 The installer writes a canonical copy to `.agents/skills` (Cursor, GitHub Copilot, OpenCode, Amp, Codex, Gemini CLI) and symlinks that tree into `.claude/skills` and `.windsurf/skills`. Re-run with more `-a` flags if you need another agent from the [CLI support table](https://github.com/vercel-labs/skills#supported-agents).
 
-Core install in this repo: **86 skills**, 22 sources, 0 failures. `npx skills list` is the live inventory; `skills-lock.json` pins hashes.
+Core install: 86 skills from 22 sources. Full harvest (this checkout): **176 skills**. Topic-card names that moved (Expo, DuckDB, Drizzle, Convex, Ralph) are remapped in `skill-pack/catalog.json`. `npx skills list` is the live inventory; `skills-lock.json` pins hashes.

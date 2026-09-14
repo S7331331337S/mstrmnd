@@ -36,6 +36,9 @@ Human index: `docs/skill-pack.md`.
 | Deploy / env / preview URLs | `deploy-to-vercel` |
 | Discover more mid-session | `find-skills` |
 | Plan → execute → verify | `writing-plans`, `executing-plans`, `verification-before-completion` |
+| Expo / RN native UI | `expo-native-ui`, `sleek-design-mobile-apps` |
+| SEO / copy / CRO | `seo-audit`, `copywriting`, `cro` |
+| Other databases (not the locked stack) | catalog only — still prefer `supabase` here |
 
 Always also load `mstrmnd-stack` so locked-stack invariants are not drifted.
 

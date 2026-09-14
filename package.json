@@ -16,6 +16,8 @@
     "verify": "pnpm typecheck && pnpm doctrine:ci",
     "skills:install": "bash scripts/install-skill-pack.sh",
     "skills:install:full": "bash scripts/install-skill-pack.sh --full",
+    "skills:install:full-only": "bash scripts/install-skill-pack.sh --full-only",
+    "skills:update": "npx --yes skills update -p -y",
     "skills:list": "npx --yes skills list"
   },
   "devDependencies": {

@@ -233,8 +233,9 @@
       "id": "expo/skills",
       "install": "expo/skills",
       "profile": "full",
-      "skills": ["building-native-ui", "native-data-fetching", "expo-tailwind-setup", "upgrading-expo"],
-      "topics": ["mobile"]
+      "skills": ["expo-native-ui", "expo-data-fetching", "expo-design-system", "expo-upgrade"],
+      "topics": ["mobile"],
+      "notes": "Topic-card names moved: building-native-ui → expo-native-ui, native-data-fetching → expo-data-fetching, upgrading-expo → expo-upgrade."
     },
     {
       "id": "sleekdotdesign/agent-skills",
@@ -268,26 +269,23 @@
       "id": "andrelandgraf/fullstackrecipes",
       "install": "andrelandgraf/fullstackrecipes",
       "profile": "full",
-      "skills": ["ralph-loop"],
+      "skills": ["ralph-loop-workflow"],
       "topics": ["agent-workflows"]
     },
     {
       "id": "get-convex/agent-skills",
       "install": "get-convex/agent-skills",
       "profile": "full",
-      "skills": ["convex-quickstart", "convex-setup-auth"],
+      "skills": ["convex-quickstart", "convex-auth"],
       "topics": ["databases"]
     },
     {
       "id": "firebase/agent-skills",
       "install": "firebase/agent-skills",
       "profile": "full",
-      "skills": [
-        "firebase-basics",
-        "firebase-auth-basics",
-        "firebase-firestore-enterprise-native-mode"
-      ],
-      "topics": ["databases"]
+      "skills": ["firebase-basics", "firebase-auth-basics"],
+      "topics": ["databases"],
+      "notes": "firebase-firestore-enterprise-native-mode is not published in firebase/agent-skills."
     },
     {
       "id": "neondatabase/agent-skills",
@@ -314,14 +312,14 @@
       "id": "duckdb/duckdb-skills",
       "install": "duckdb/duckdb-skills",
       "profile": "full",
-      "skills": ["duckdb-query"],
+      "skills": ["query", "duckdb-docs", "install-duckdb"],
       "topics": ["databases"]
     },
     {
       "id": "bobmatnyc/claude-mpm-skills",
       "install": "bobmatnyc/claude-mpm-skills",
       "profile": "full",
-      "skills": ["drizzle-orm"],
+      "skills": ["drizzle", "drizzle-migrations"],
       "topics": ["databases"]
     },
     {
@@ -330,6 +328,32 @@
       "profile": "full",
       "skills": ["*"],
       "topics": ["marketing"]
+    },
+    {
+      "id": "stripe/ai-extras",
+      "install": "stripe/ai",
+      "profile": "full",
+      "skills": [
+        "stripe-projects",
+        "stripe-directory",
+        "stripe-apps",
+        "connect-recommend"
+      ],
+      "topics": ["ai"]
+    },
+    {
+      "id": "vercel/workflow-extras",
+      "install": "vercel/workflow",
+      "profile": "full",
+      "skills": ["migrating-to-workflow-sdk"],
+      "topics": ["ai"]
+    },
+    {
+      "id": "vercel/eve-extras",
+      "install": "vercel/eve",
+      "profile": "full",
+      "skills": ["gh-pr-description", "technical-writing"],
+      "topics": ["ai", "agent-workflows"]
     }
   ]
 }
