@@ -1,0 +1,335 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "mstrmnd-skill-super-pack",
+  "description": "Curated agent skill pack collected from skills.sh topic cards, biased toward Design/UI, Vercel, React, Next.js, and AI. Install with scripts/install-skill-pack.sh.",
+  "source": "https://www.skills.sh/topic/",
+  "forks": {
+    "skills_cli": {
+      "upstream": "https://github.com/vercel-labs/skills",
+      "fork": "https://github.com/S7331331337S/skills-1",
+      "note": "Named skills-1 because S7331331337S/skills is already the Expo skills pack."
+    },
+    "agent_skills": {
+      "upstream": "https://github.com/vercel-labs/agent-skills",
+      "fork": "https://github.com/S7331331337S/agent-skills"
+    },
+    "expo_skills": {
+      "upstream": "https://github.com/expo/skills",
+      "fork": "https://github.com/S7331331337S/skills"
+    }
+  },
+  "agents": [
+    "cursor",
+    "claude-code",
+    "github-copilot",
+    "opencode",
+    "amp",
+    "codex",
+    "gemini-cli",
+    "windsurf"
+  ],
+  "profiles": {
+    "core": "Design/UI + Vercel + React + Next.js + AI + Mstrmnd locked stack",
+    "full": "Every skill listed on the skills.sh topic cards, plus core AI extras"
+  },
+  "sources": [
+    {
+      "id": "vercel-labs/agent-skills",
+      "install": "vercel-labs/agent-skills",
+      "profile": "core",
+      "skills": ["*"],
+      "topics": ["react", "nextjs", "design", "mobile"],
+      "priority": "high",
+      "notes": "Official Vercel React, composition, web design, deploy, RN, view transitions."
+    },
+    {
+      "id": "vercel/next.js",
+      "install": "vercel/next.js",
+      "profile": "core",
+      "skills": [
+        "next-cache-components-optimizer",
+        "next-cache-components-adoption",
+        "next-dev-loop",
+        "next-partial-prefetching-adoption"
+      ],
+      "topics": ["nextjs"],
+      "priority": "high",
+      "notes": "Replaces vercel-labs/next-skills. next-best-practices now ships via Next.js 16.3 AGENTS.md."
+    },
+    {
+      "id": "vercel/ai",
+      "install": "vercel/ai",
+      "profile": "core",
+      "skills": ["ai-sdk", "migrate-ai-sdk-v6-to-v7"],
+      "topics": ["ai", "nextjs"],
+      "priority": "high"
+    },
+    {
+      "id": "shadcn-ui/ui",
+      "install": "shadcn-ui/ui",
+      "profile": "core",
+      "skills": ["shadcn"],
+      "topics": ["react", "design"],
+      "priority": "high"
+    },
+    {
+      "id": "vercel-labs/skills",
+      "install": "vercel-labs/skills",
+      "profile": "core",
+      "skills": ["find-skills"],
+      "topics": ["agent-workflows"],
+      "priority": "high"
+    },
+    {
+      "id": "anthropics/skills",
+      "install": "anthropics/skills",
+      "profile": "core",
+      "skills": ["frontend-design", "skill-creator", "webapp-testing", "canvas-design"],
+      "topics": ["design", "react", "testing", "agent-workflows"],
+      "priority": "high"
+    },
+    {
+      "id": "pbakaus/impeccable",
+      "install": "pbakaus/impeccable",
+      "profile": "core",
+      "skills": ["*"],
+      "topics": ["design"],
+      "priority": "high",
+      "notes": "polish, critique, bolder, delight, distill, quieter."
+    },
+    {
+      "id": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "install": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "profile": "core",
+      "skills": ["*"],
+      "topics": ["design"],
+      "priority": "high"
+    },
+    {
+      "id": "leonxlnx/taste-skill",
+      "install": "leonxlnx/taste-skill",
+      "profile": "core",
+      "skills": ["*"],
+      "topics": ["design"],
+      "priority": "high"
+    },
+    {
+      "id": "emilkowalski/skill",
+      "install": "emilkowalski/skill",
+      "profile": "core",
+      "skills": ["*"],
+      "topics": ["design"],
+      "priority": "high"
+    },
+    {
+      "id": "uizze-anti-ui-slop",
+      "install": "https://uizze.com/",
+      "profile": "core",
+      "skills": ["*"],
+      "topics": ["design"],
+      "priority": "high"
+    },
+    {
+      "id": "supabase/agent-skills",
+      "install": "supabase/agent-skills",
+      "profile": "core",
+      "skills": ["supabase", "supabase-postgres-best-practices"],
+      "topics": ["databases"],
+      "priority": "high"
+    },
+    {
+      "id": "vercel/workflow",
+      "install": "vercel/workflow",
+      "profile": "core",
+      "skills": ["workflow", "workflow-init"],
+      "topics": ["ai"],
+      "priority": "high"
+    },
+    {
+      "id": "vercel/eve",
+      "install": "vercel/eve",
+      "profile": "core",
+      "skills": ["eve"],
+      "topics": ["ai"],
+      "priority": "high"
+    },
+    {
+      "id": "stripe/ai",
+      "install": "stripe/ai",
+      "profile": "core",
+      "skills": ["stripe-best-practices", "stripe-docs", "upgrade-stripe"],
+      "topics": ["ai"],
+      "priority": "high"
+    },
+    {
+      "id": "vercel/turborepo",
+      "install": "vercel/turborepo",
+      "profile": "core",
+      "skills": ["*"],
+      "topics": ["nextjs"],
+      "priority": "medium"
+    },
+    {
+      "id": "obra/superpowers",
+      "install": "obra/superpowers",
+      "profile": "core",
+      "skills": [
+        "brainstorming",
+        "systematic-debugging",
+        "writing-plans",
+        "executing-plans",
+        "test-driven-development",
+        "requesting-code-review",
+        "subagent-driven-development",
+        "verification-before-completion",
+        "dispatching-parallel-agents",
+        "using-git-worktrees",
+        "finishing-a-development-branch"
+      ],
+      "topics": ["agent-workflows", "testing"],
+      "priority": "high"
+    },
+    {
+      "id": "microsoft/playwright-cli",
+      "install": "microsoft/playwright-cli",
+      "profile": "core",
+      "skills": ["*"],
+      "topics": ["testing"],
+      "priority": "medium"
+    },
+    {
+      "id": "currents-dev/playwright-best-practices-skill",
+      "install": "currents-dev/playwright-best-practices-skill",
+      "profile": "core",
+      "skills": ["*"],
+      "topics": ["testing"],
+      "priority": "medium"
+    },
+    {
+      "id": "vercel-labs/agent-browser",
+      "install": "vercel-labs/agent-browser",
+      "profile": "core",
+      "skills": ["*"],
+      "topics": ["agent-workflows"],
+      "priority": "medium"
+    },
+    {
+      "id": "arvindrk/extract-design-system",
+      "install": "arvindrk/extract-design-system",
+      "profile": "core",
+      "skills": ["*"],
+      "topics": ["design"],
+      "priority": "medium"
+    },
+    {
+      "id": "wshobson/agents",
+      "install": "wshobson/agents",
+      "profile": "core",
+      "skills": ["typescript-advanced-types", "tailwind-design-system"],
+      "topics": ["react"],
+      "priority": "medium"
+    },
+    {
+      "id": "expo/skills",
+      "install": "expo/skills",
+      "profile": "full",
+      "skills": ["building-native-ui", "native-data-fetching", "expo-tailwind-setup", "upgrading-expo"],
+      "topics": ["mobile"]
+    },
+    {
+      "id": "sleekdotdesign/agent-skills",
+      "install": "sleekdotdesign/agent-skills",
+      "profile": "full",
+      "skills": ["*"],
+      "topics": ["mobile", "design"]
+    },
+    {
+      "id": "browser-use/browser-use",
+      "install": "browser-use/browser-use",
+      "profile": "full",
+      "skills": ["*"],
+      "topics": ["agent-workflows"]
+    },
+    {
+      "id": "subsy/ralph-tui",
+      "install": "subsy/ralph-tui",
+      "profile": "full",
+      "skills": ["*"],
+      "topics": ["agent-workflows"]
+    },
+    {
+      "id": "fstandhartinger/ralph-wiggum",
+      "install": "fstandhartinger/ralph-wiggum",
+      "profile": "full",
+      "skills": ["*"],
+      "topics": ["agent-workflows"]
+    },
+    {
+      "id": "andrelandgraf/fullstackrecipes",
+      "install": "andrelandgraf/fullstackrecipes",
+      "profile": "full",
+      "skills": ["ralph-loop"],
+      "topics": ["agent-workflows"]
+    },
+    {
+      "id": "get-convex/agent-skills",
+      "install": "get-convex/agent-skills",
+      "profile": "full",
+      "skills": ["convex-quickstart", "convex-setup-auth"],
+      "topics": ["databases"]
+    },
+    {
+      "id": "firebase/agent-skills",
+      "install": "firebase/agent-skills",
+      "profile": "full",
+      "skills": [
+        "firebase-basics",
+        "firebase-auth-basics",
+        "firebase-firestore-enterprise-native-mode"
+      ],
+      "topics": ["databases"]
+    },
+    {
+      "id": "neondatabase/agent-skills",
+      "install": "neondatabase/agent-skills",
+      "profile": "full",
+      "skills": ["neon-postgres"],
+      "topics": ["databases"]
+    },
+    {
+      "id": "planetscale/database-skills",
+      "install": "planetscale/database-skills",
+      "profile": "full",
+      "skills": ["*"],
+      "topics": ["databases"]
+    },
+    {
+      "id": "tursodatabase/agent-skills",
+      "install": "tursodatabase/agent-skills",
+      "profile": "full",
+      "skills": ["turso-db"],
+      "topics": ["databases"]
+    },
+    {
+      "id": "duckdb/duckdb-skills",
+      "install": "duckdb/duckdb-skills",
+      "profile": "full",
+      "skills": ["duckdb-query"],
+      "topics": ["databases"]
+    },
+    {
+      "id": "bobmatnyc/claude-mpm-skills",
+      "install": "bobmatnyc/claude-mpm-skills",
+      "profile": "full",
+      "skills": ["drizzle-orm"],
+      "topics": ["databases"]
+    },
+    {
+      "id": "coreyhaines31/marketingskills",
+      "install": "coreyhaines31/marketingskills",
+      "profile": "full",
+      "skills": ["*"],
+      "topics": ["marketing"]
+    }
+  ]
+}
