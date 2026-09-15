@@ -4,8 +4,9 @@
 #
 # Usage:
 #   bash scripts/install-skill-pack.sh          # core profile (design/ui/vercel/react/next/ai)
-#   bash scripts/install-skill-pack.sh --full   # every skills.sh topic-card skill
-#   bash scripts/install-skill-pack.sh --list   # print planned installs without running
+#   bash scripts/install-skill-pack.sh --full        # every skills.sh topic-card skill
+#   bash scripts/install-skill-pack.sh --full-only   # remaining topic-card skills not in core
+#   bash scripts/install-skill-pack.sh --list        # print planned installs without running
 
 set -euo pipefail
 
@@ -19,6 +20,7 @@ AGENTS=(cursor claude-code github-copilot opencode amp codex gemini-cli windsurf
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --full) PROFILE="full" ;;
+    --full-only) PROFILE="full-only" ;;
     --core) PROFILE="core" ;;
     --list) DRY_RUN=1 ;;
     -h|--help)
@@ -49,6 +51,7 @@ const catalog = JSON.parse(readFileSync(process.argv[1], 'utf8'));
 const profile = process.argv[2];
 for (const source of catalog.sources) {
   if (profile === 'core' && source.profile === 'full') continue;
+  if (profile === 'full-only' && source.profile !== 'full') continue;
   const skills = Array.isArray(source.skills) ? source.skills.join(',') : '*';
   console.log([source.install, skills, source.id].join('\t'));
 }
@@ -117,6 +120,26 @@ fi
 
 echo "==> local routers (./skills)"
 npx --yes skills add ./skills --skill '*' "${AGENT_FLAGS[@]}" -y || true
+
+echo "==> symlink Claude Code + Windsurf to .agents/skills"
+mkdir -p "$ROOT/.claude/skills" "$ROOT/.windsurf/skills"
+for d in "$ROOT/.agents/skills"/*; do
+  [[ -e "$d" ]] || continue
+  name="$(basename "$d")"
+  ln -sfn "../../.agents/skills/${name}" "$ROOT/.claude/skills/${name}"
+  ln -sfn "../../.agents/skills/${name}" "$ROOT/.windsurf/skills/${name}"
+done
+
+echo "==> write inventory"
+npx --yes skills list | sed 's/\x1b\[[0-9;]*m//g' > "$ROOT/skill-pack/installed.txt" || true
+node --input-type=module -e "
+import { readdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+const dir = join(process.argv[1], '.agents/skills');
+const names = readdirSync(dir).filter((name) => !name.startsWith('.')).sort();
+writeFileSync(join(process.argv[1], 'skill-pack/installed-names.txt'), names.join('\n') + '\n');
+console.log('inventory', names.length);
+" "$ROOT"
 
 echo
 npx --yes skills list || true
