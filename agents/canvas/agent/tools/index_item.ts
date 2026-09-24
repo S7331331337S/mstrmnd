@@ -12,7 +12,9 @@ export default defineTool({
       .string()
       .uuid()
       .optional()
-      .describe("When set, mark the job awaiting_approval after indexing this item"),
+      .describe(
+        "Optional ce_jobs.id override used only when mark_job_complete is true; otherwise the item's job_id is used",
+      ),
     mark_job_complete: z
       .boolean()
       .optional()
