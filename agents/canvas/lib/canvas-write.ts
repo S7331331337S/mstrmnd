@@ -8,6 +8,7 @@ import type {
   CanvasVoice,
   ScoutPacket,
 } from "@mstrmnd/shared";
+import { randomUUID } from "node:crypto";
 import { DEFAULT_CANVAS_FORMATS } from "@mstrmnd/shared";
 import { computeCanvasPlanSteps, planCanvasJob, type CanvasPlan } from "./fanout";
 import { loadVoiceBible } from "./canon";
@@ -93,14 +94,17 @@ export async function insertCanvasItem(params: {
 }): Promise<CanvasItem> {
   assertVoice(params.job.voice, params.body);
   const supabase = getServiceSupabase();
+  const id = randomUUID();
   const { data, error } = await supabase
     .from("ce_items")
     .insert({
+      id,
       job_id: params.job.id,
       user_id: params.userId,
       format: params.format,
       draft_cycle: 1,
       body: params.body,
+      content_ref: `ce_items/${id}`,
       model_used: params.modelUsed,
       status: "drafted" as CanvasItemStatus,
       metadata: params.metadata ?? {},
@@ -111,20 +115,7 @@ export async function insertCanvasItem(params: {
   if (error || !data) {
     throw new Error(`Failed to insert CANVAS item: ${error?.message}`);
   }
-
-  const id = (data as CanvasItem).id;
-  const { data: updated, error: updateError } = await supabase
-    .from("ce_items")
-    .update({ content_ref: `ce_items/${id}` })
-    .eq("id", id)
-    .eq("user_id", params.userId)
-    .select("*")
-    .single();
-
-  if (updateError || !updated) {
-    throw new Error(`Failed to set content_ref: ${updateError?.message}`);
-  }
-  return updated as CanvasItem;
+  return data as CanvasItem;
 }
 
 export async function indexCanvasItem(params: {
