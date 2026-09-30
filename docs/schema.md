@@ -37,6 +37,7 @@ Triggers:
 
 ### `ce_jobs`
 - Content Engine jobs. DESK-shaped: `source`, `touchpoint`, `template`, `voice` (`labs`|`operator`), `thesis`, `scout_packet` jsonb, `formats` text[]
+- `formats` must be non-empty and contain only supported CANVAS formats
 - `status`: `queued` | `research` | `drafting` | `gating` | `awaiting_approval` | `published` | `killed`
 - Owned by `user_id` → `profiles.id`
 - Written by the canvas eve agent (service role)
@@ -44,6 +45,7 @@ Triggers:
 ### `ce_items`
 - One draft per format for a job (`press_card`, `linkedin`, `visual_spec`, …)
 - `body` holds the draft; `content_ref` is `ce_items/{id}`
+- `format` is constrained to the supported CANVAS format set; `content_ref` is written atomically with the row
 - `status`: `drafted` | `indexed` | `rejected`
 - CANVAS indexes after draft; CIPHER / HERALD tables exist but have no writers in this slice
 
@@ -61,7 +63,8 @@ Core tables have RLS enabled.
 | `messages` | `user_id = auth.uid()` | SELECT / INSERT / UPDATE own |
 | `signal_reports` | `user_id = auth.uid()` | SELECT / INSERT / UPDATE own |
 | `ce_jobs` | `user_id = auth.uid()` | SELECT / INSERT / UPDATE own |
-| `ce_items` | `user_id = auth.uid()` | SELECT / INSERT / UPDATE own |
+| `ce_items` | `user_id = auth.uid()` and parent job has the same owner | SELECT own; INSERT / UPDATE only against own jobs |
+| `ce_metrics_daily` | service role only | No authenticated-client policy until AXIOM has tenant ownership |
 
 Eve agents use the **service role** key for profile merges (onboarding), signal report writes, and CANVAS `ce_jobs` / `ce_items` writes. Service role bypasses RLS by design.
 
