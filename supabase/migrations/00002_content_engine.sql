@@ -104,7 +104,13 @@ create policy "ce_jobs_update_own"
 create policy "ce_items_select_own"
   on public.ce_items for select using (auth.uid() = user_id);
 create policy "ce_items_insert_own"
-  on public.ce_items for insert with check (auth.uid() = user_id);
+  on public.ce_items for insert
+  with check (
+    auth.uid() = user_id
+    and exists (
+      select 1 from public.ce_jobs j where j.id = job_id and j.user_id = auth.uid()
+    )
+  );
 create policy "ce_items_update_own"
   on public.ce_items for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
