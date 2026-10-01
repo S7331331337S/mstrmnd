@@ -21,7 +21,8 @@ create table public.ce_jobs (
   voice text not null check (voice in ('labs', 'operator')),
   thesis text not null,
   scout_packet jsonb not null default '{}'::jsonb,
-  formats text[] not null default array['press_card', 'linkedin']::text[],
+  formats text[] not null default array['press_card', 'linkedin']::text[]
+    check (formats <@ array['press_card', 'linkedin', 'x_thread', 'email', 'site', 'proposal', 'report', 'visual_spec']::text[]),
   status text not null default 'queued'
     check (status in (
       'queued', 'research', 'drafting', 'gating',
