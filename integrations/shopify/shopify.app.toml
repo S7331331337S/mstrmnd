@@ -1,0 +1,11 @@
+# Configure a development app with scripts/configure.mjs before installation.
+client_id = "00000000000000000000000000000000"
+name = "MSTRMND Discount Studio"
+application_url = "https://example.invalid/shopify/discounts/new"
+embedded = true
+[access_scopes]
+scopes = "read_discounts,write_discounts"
+[auth]
+redirect_urls = ["https://example.invalid/shopify/discounts/new"]
+[webhooks]
+api_version = "2026-07"
