@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { OperatorStatus } from "@/components/operator-status";
 import { isUiPreview } from "@/lib/preview";
 import { createClient } from "@/lib/supabase/server";
 
@@ -73,6 +74,7 @@ export default async function HomePage() {
               </Link>
             </Button>
           </div>
+          <OperatorStatus />
         </section>
 
         <footer className="animate-rise-delay-3 border-t border-zinc-900/80 pt-5 text-[10px] uppercase tracking-[0.14em] text-zinc-600 sm:text-[11px] sm:tracking-[0.16em]">
