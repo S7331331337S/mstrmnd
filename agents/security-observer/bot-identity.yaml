@@ -1,0 +1,53 @@
+schema_version: "1.0"
+bot:
+  bot_id: bot_mstrmnd_observer_001
+  canonical_id: mstrmnd://bot/security/observer/001
+  name: MSTRMND Observer
+  class: security_observer
+  owner: mstrmnd
+  immutable_identity: true
+
+runtime:
+  instance_id: runtime_generated
+  session_id: session_generated
+  deployment_id: deployment_generated
+  environment: runtime
+  model: runtime
+  version: git_sha
+
+capabilities:
+  allow:
+    - telemetry.read
+    - traces.read
+    - security.findings.write
+    - alerts.create
+  deny:
+    - secrets.read
+    - database.write
+    - database.delete
+    - deployment.delete
+    - permissions.modify
+
+behavior:
+  network_access: restricted
+  privilege_escalation: forbidden
+  self_modify: false
+  spawn_agents: false
+  max_tool_calls_per_minute: 100
+
+observability:
+  trace_every_action: true
+  sign_events: true
+  retain_lineage: true
+  required_fields:
+    - bot_id
+    - timestamp
+    - session_id
+    - trace_id
+    - action
+    - resource
+    - result
+
+# Public-key fingerprint is intentionally provisioned at deployment rather than committed.
+cryptographic_identity:
+  public_key_fingerprint_env: MSTRMND_OBSERVER_PUBLIC_KEY_FINGERPRINT
