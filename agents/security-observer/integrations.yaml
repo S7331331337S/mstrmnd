@@ -1,0 +1,82 @@
+version: "1.0"
+observer_bot_id: bot_mstrmnd_observer_001
+
+vercel:
+  primary_project:
+    name: mstrmnd-core
+    project_id: prj_G7hU45YyuWzn5yum5KoJ7dhDyHc5
+  ingest:
+    - runtime_errors
+    - runtime_logs
+    - agent_runs
+    - otel_traces
+    - deployments
+  normalize:
+    request_id: trace_id
+    deployment_id: deployment_id
+    route: resource_id
+  detectors:
+    - runtime_error_spike
+    - auth_route_error
+    - agent_model_failure
+    - unexpected_deployment
+    - request_rate_anomaly
+    - denied_or_missing_bot_identity
+  required_runtime_env:
+    MSTRMND_BOT_ID: bot_mstrmnd_observer_001
+    MSTRMND_BOT_CANONICAL_ID: mstrmnd://bot/security/observer/001
+
+supabase:
+  project:
+    name: mstrepo
+    project_id: qqcrngshszhgluhvrkqi
+  ingest_sources:
+    - postgres_logs
+    - pgbouncer_logs
+    - edge_logs
+    - postgrest_logs
+    - storage_logs
+    - realtime_logs
+  detectors:
+    - rls_denial_spike
+    - auth_failure_spike
+    - unusual_query_volume
+    - cross_tenant_indicator
+    - destructive_query_indicator
+    - storage_access_anomaly
+    - connection_pool_anomaly
+
+telemetry_contract:
+  required:
+    - event_id
+    - timestamp
+    - source
+    - environment
+    - bot_id
+    - action
+    - result
+    - trace_id
+  optional:
+    - session_id
+    - actor_id
+    - resource_id
+    - deployment_id
+    - latency_ms
+    - tokens
+    - cost_usd
+    - security_signals
+
+bootstrap_findings:
+  - id: vercel_pg_ssl_semantics_warning
+    surface: data
+    severity: medium
+    recommendation: explicitly configure sslmode=verify-full before pg major-version behavior changes
+  - id: vercel_agent_model_unavailable
+    surface: model_runtime
+    severity: medium
+    recommendation: validate configured model IDs against the active AI Gateway model catalog during deployment
+
+notes:
+  - Vercel Agent Runs ingestion requires account permission; treat 403 as telemetry-unavailable, not as no activity.
+  - BOT_ID environment variables must be provisioned in Vercel by an account with project environment-variable write permission.
+  - Supabase security advisors were clean at bootstrap; continue checking after DDL/RLS changes.
