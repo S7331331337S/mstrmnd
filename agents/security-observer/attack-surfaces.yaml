@@ -1,0 +1,63 @@
+version: "1.0"
+observer:
+  bot_id: bot_mstrmnd_observer_001
+  canonical_id: mstrmnd://bot/security/observer/001
+  mode: observe_correlate_score_recommend
+  default_action: observe
+
+identity_policy:
+  require_bot_id: true
+  reject_anonymous_privileged_actions: true
+  preserve_delegation_lineage: true
+  runtime_ids_ephemeral: true
+  root_bot_id_immutable: true
+
+surfaces:
+  - id: identity_auth
+    signals: [auth_failure_rate, impossible_travel, session_reuse, privilege_change]
+  - id: agent_tools
+    signals: [undeclared_tool, denied_capability, tool_call_spike, delegation_anomaly]
+  - id: context_prompt
+    signals: [prompt_injection_indicator, untrusted_context_instruction, system_prompt_exfiltration]
+  - id: secrets
+    signals: [secret_access, credential_failure, secret_then_egress]
+  - id: data
+    signals: [rls_denial, unusual_query_volume, cross_tenant_access, destructive_query]
+  - id: network_api
+    signals: [rate_spike, unusual_egress, unknown_destination, repeated_4xx_5xx]
+  - id: model_runtime
+    signals: [token_spike, cost_spike, latency_spike, behavioral_drift]
+  - id: deploy_supply_chain
+    signals: [unexpected_deploy, dependency_change, workflow_change, provenance_failure]
+  - id: payments
+    signals: [payment_failure_spike, webhook_signature_failure, unusual_refund_activity]
+
+severity:
+  info: {score_min: 0, action: log}
+  low: {score_min: 20, action: aggregate}
+  medium: {score_min: 40, action: finding}
+  high: {score_min: 65, action: alert_operator}
+  critical: {score_min: 85, action: containment_if_pre_authorized}
+
+response_policy:
+  autonomous_allow:
+    - security.findings.write
+    - alerts.create
+    - telemetry.read
+    - traces.read
+  containment_requires_pre_authorization:
+    - session.revoke
+    - principal.rate_limit
+    - agent.capability.disable
+  always_require_human:
+    - database.write
+    - database.delete
+    - deployment.delete
+    - permissions.modify
+    - secrets.read
+
+correlation:
+  keys: [bot_id, actor_id, session_id, trace_id, resource_id, deployment_id]
+  windows_seconds: [60, 300, 3600]
+  require_explanation: true
+  preserve_evidence: true
