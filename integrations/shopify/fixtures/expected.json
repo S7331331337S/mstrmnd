@@ -1,0 +1,26 @@
+{
+  "operations": [
+    {
+      "orderDiscountsAdd": {
+        "candidates": [
+          {
+            "message": "10% MSTRMND incentive",
+            "targets": [
+              {
+                "orderSubtotal": {
+                  "excludedCartLineIds": []
+                }
+              }
+            ],
+            "value": {
+              "percentage": {
+                "value": "10"
+              }
+            }
+          }
+        ],
+        "selectionStrategy": "FIRST"
+      }
+    }
+  ]
+}

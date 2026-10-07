@@ -1,0 +1,13 @@
+[[extensions]]
+name = "Edit MSTRMND cart incentive"
+description = "Edit an automatic percentage discount above a minimum cart subtotal. Merchant reviews and confirms changes."
+handle = "mstrmnd-edit-incentive"
+type = "admin_link"
+[[extensions.targeting]]
+target = "admin.app.intent.link"
+url = "/shopify/discounts/{id}"
+instructions = "./instructions.md"
+[[extensions.targeting.intents]]
+type = "shopify/Discount"
+action = "edit"
+schema = "./discount-schema.json"

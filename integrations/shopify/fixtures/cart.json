@@ -1,0 +1,18 @@
+{
+  "cart": {
+    "cost": {
+      "subtotalAmount": {
+        "amount": "150.00",
+        "currencyCode": "USD"
+      }
+    }
+  },
+  "discount": {
+    "discountClasses": [
+      "ORDER"
+    ],
+    "metafield": {
+      "value": "{\"version\": 1, \"percentage\": 10, \"minimumSubtotal\": 100, \"currencyCode\": \"USD\"}"
+    }
+  }
+}

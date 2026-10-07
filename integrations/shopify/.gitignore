@@ -1,0 +1,5 @@
+node_modules/
+.shopify/
+extensions/mstrmnd-cart-incentive/
+.env*
+!.env.example

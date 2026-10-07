@@ -1,0 +1,7 @@
+query CartInput {
+  cart { cost { subtotalAmount { amount currencyCode } } }
+  discount {
+    discountClasses
+    metafield(namespace: "$app:mstrmnd", key: "cart-incentive") { value }
+  }
+}
